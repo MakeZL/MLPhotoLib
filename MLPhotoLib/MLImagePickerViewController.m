@@ -7,17 +7,19 @@
 //
 
 #import "MLImagePickerViewController.h"
-#import "MLPhotoPickerManager.h"
+#import "MLImagePickerViewController+MenuTableViewDataSource.h"
 #import "MLNavigationViewController.h"
 #import "MLPhotoPickerCollectionView.h"
-#import "MLPhotoPickerData.h"
 #import "MLPhotoPickerCollectionView.h"
+#import "MLImagePickerMenuTableViewCell.h"
+#import "MLPhotoPickerData.h"
+#import "MLPhotoPickerManager.h"
 #import "MLPhotoAsset.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 static NSUInteger kDefaultMaxCount = 9;
 
-@interface MLImagePickerViewController () <UITableViewDelegate,UITableViewDataSource>
+@interface MLImagePickerViewController ()
 @property (nonatomic, weak) UITableView *groupTableView;
 @property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
 @end
@@ -83,6 +85,7 @@ static NSUInteger kDefaultMaxCount = 9;
     WeakSelf
     MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
     [pickerData getAllGroup:^(NSArray *groups) {
+        weakSelf.groups = groups;
         [weakSelf groupsWithAsset:groups];
     }];
     //    }
@@ -93,19 +96,24 @@ static NSUInteger kDefaultMaxCount = 9;
     for (MLPhotoPickerGroup *group in groups) {
         if ([group.type integerValue] == 16) {
             // 相机胶卷
-            WeakSelf
-            [[MLPhotoPickerData pickerData] getGroupPhotosWithGroup:group finished:^(NSArray *assets) {
-                NSMutableArray *tmpArrayM = [NSMutableArray arrayWithCapacity:assets.count];
-                for (ALAsset *asset in assets) {
-                    __block MLPhotoAsset *mlAsset = [[MLPhotoAsset alloc] init];
-                    mlAsset.asset = asset;
-                    [tmpArrayM addObject:mlAsset];
-                }
-                weakSelf.contentCollectionView.albumAssets = tmpArrayM;
-            }];
+            [self reloadCollectionViewWithGroup:group];
             break;
         }
     }
+}
+
+- (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group
+{
+    WeakSelf
+    [[MLPhotoPickerData pickerData] getGroupPhotosWithGroup:group finished:^(NSArray *assets) {
+        NSMutableArray *tmpArrayM = [NSMutableArray arrayWithCapacity:assets.count];
+        for (ALAsset *asset in assets) {
+            __block MLPhotoAsset *mlAsset = [[MLPhotoAsset alloc] init];
+            mlAsset.asset = asset;
+            [tmpArrayM addObject:mlAsset];
+        }
+        weakSelf.contentCollectionView.albumAssets = tmpArrayM;
+    }];
 }
 
 - (UIButton *)setupTitleView
@@ -131,9 +139,11 @@ static NSUInteger kDefaultMaxCount = 9;
     if (!_groupTableView) {
         UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
         groupTableView.alpha = 0.0;
-        groupTableView.backgroundColor = [UIColor redColor];
-//        groupTableView.dataSource = self;
-//        groupTableView.delegate = self;
+        groupTableView.backgroundColor = [UIColor whiteColor];
+        groupTableView.dataSource = self;
+        groupTableView.delegate = self;
+        groupTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [groupTableView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerMenuTableViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([MLImagePickerMenuTableViewCell class])];
         [self.view addSubview:_groupTableView = groupTableView];
     }
     return _groupTableView;

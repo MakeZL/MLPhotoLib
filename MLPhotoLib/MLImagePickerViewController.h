@@ -8,8 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class MLPhotoPickerGroup;
 @interface MLImagePickerViewController : UIViewController
 + (instancetype)pickerViewController;
+
+@property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;
+
+- (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group;
+- (void)tappendTitleView;
 /// Limit Max Picker Count
 @property (nonatomic, assign) NSUInteger maxCount;
 /// Show In viewController
