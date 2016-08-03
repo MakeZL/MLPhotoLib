@@ -15,14 +15,26 @@
 #import "MLPhotoPickerData.h"
 #import "MLPhotoPickerManager.h"
 #import "MLPhotoKitData.h"
+#import "MLPhotoPickerAssetsManager.h"
 #import "MLPhotoAsset.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
+#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
+#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
+#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
+
 static NSUInteger kDefaultMaxCount = 9;
+static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
+static CGFloat MLImagePickerCellMargin = 2;
+static CGFloat MLImagePickerCellRowCount = 4;
+static NSInteger MLImagePickerMaxCount = 9;
+
 
 @interface MLImagePickerViewController ()
 @property (nonatomic, weak) UITableView *groupTableView;
 @property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
+@property (nonatomic, strong) MLPhotoPickerAssetsManager *imageManager;
+@property (nonatomic, strong) PHFetchResult *fetchResult;
 @end
 
 @implementation MLImagePickerViewController
@@ -90,7 +102,35 @@ static NSUInteger kDefaultMaxCount = 9;
 - (void)setupPickerData
 {
     if (gtiOS8) {
+        
+        self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
+        self.fetchResult = [self.imageManager fetchResult];
+
         // PhotoKit
+//        CGSize size = CGSizeMake(MLImagePickerCellWidth * MLImagePickerUIScreenScale, MLImagePickerCellWidth * MLImagePickerUIScreenScale);
+        
+        PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
+        requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        requestOptions.networkAccessAllowed = YES;
+        
+        for (NSInteger i = 0; i < self.fetchResult.count; i++){
+            PHAsset *asset = self.fetchResult[i];
+//            self.photoIdentifiers.append(asset.localIdentifier)
+            
+//            if self.selectIndentifiers.contains(asset.localIdentifier) == true {
+//                self.imageManager.requestImageForAsset(asset, targetSize: AssetGridThumbnailSize, contentMode: .AspectFill, options: nil) { (let image, let info:[NSObject : AnyObject]?) -> Void in
+//                    if info![PHImageFileURLKey] != nil {
+//                        self.phImageFileUrls.append(info![PHImageFileURLKey] as! NSURL)
+//                    }
+//                    self.selectImages.append(image!)
+//                }
+//            }
+        }
+//        self.collectionView?.reloadData()
+//        self.collectionView?.layoutIfNeeded()
+//        if self.cancleLongGestureScrollSelectedPicker == false {
+//            self.collectionView?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressGestureScrollPhoto:"))
+//        }
         
     } else {
         WeakSelf

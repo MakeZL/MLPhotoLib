@@ -27,6 +27,7 @@
 		428097241D51AA7E008542BB /* MLImagePickerViewController+MenuTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 428097161D51AA7E008542BB /* MLImagePickerViewController+MenuTableViewDataSource.m */; };
 		428097251D51AA7E008542BB /* MLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 428097181D51AA7E008542BB /* MLImagePickerViewController.m */; };
 		428097261D51AA7E008542BB /* MLNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4280971A1D51AA7E008542BB /* MLNavigationViewController.m */; };
+		48D20D181D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D20D171D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,8 @@
 		428097181D51AA7E008542BB /* MLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLImagePickerViewController.m; sourceTree = "<group>"; };
 		428097191D51AA7E008542BB /* MLNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNavigationViewController.h; sourceTree = "<group>"; };
 		4280971A1D51AA7E008542BB /* MLNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNavigationViewController.m; sourceTree = "<group>"; };
+		48D20D161D5245CF002F78C9 /* MLPhotoPickerAssetsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPhotoPickerAssetsManager.h; sourceTree = "<group>"; };
+		48D20D171D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLPhotoPickerAssetsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +199,8 @@
 				428097081D51AA7E008542BB /* MLPhotoPickerData.m */,
 				428097091D51AA7E008542BB /* MLPhotoPickerManager.h */,
 				4280970A1D51AA7E008542BB /* MLPhotoPickerManager.m */,
+				48D20D161D5245CF002F78C9 /* MLPhotoPickerAssetsManager.h */,
+				48D20D171D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -368,6 +373,7 @@
 				4280971E1D51AA7E008542BB /* MLPhotoPickerManager.m in Sources */,
 				428097251D51AA7E008542BB /* MLImagePickerViewController.m in Sources */,
 				4280971D1D51AA7E008542BB /* MLPhotoPickerData.m in Sources */,
+				48D20D181D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m in Sources */,
 				428097231D51AA7E008542BB /* MLPhotoPickerCollectionView.m in Sources */,
 				4274E44C1D4F21C0001D39C3 /* AppDelegate.m in Sources */,
 				4274E4491D4F21C0001D39C3 /* main.m in Sources */,
