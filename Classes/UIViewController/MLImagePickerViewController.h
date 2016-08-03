@@ -19,7 +19,5 @@
 /// Limit Max Picker Count
 @property (nonatomic, assign) NSUInteger maxCount;
 /// Show In viewController
-- (void)displayForVC:(__weak UIViewController *)viewController;
-/// Show In Window.
-- (void)display;
+- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success, NSError *error))completionHandle;
 @end

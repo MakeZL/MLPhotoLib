@@ -14,6 +14,7 @@
 #import "MLImagePickerMenuTableViewCell.h"
 #import "MLPhotoPickerData.h"
 #import "MLPhotoPickerManager.h"
+#import "MLPhotoKitData.h"
 #import "MLPhotoAsset.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -26,14 +27,25 @@ static NSUInteger kDefaultMaxCount = 9;
 
 @implementation MLImagePickerViewController
 
-- (void)displayForVC:(__weak UIViewController *)viewController
+- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success, NSError *error))completionHandle
 {
+    if (gtiOS8)
+    {
+        if (![MLPhotoKitData judgeIsHavePhotoAblumAuthority])
+        {
+            NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
+            !completionHandle?:completionHandle(NO, error);
+            return;
+        }
+    } else {
+        if (![MLPhotoPickerData judgeIsHavePhotoAblumAuthority])
+        {
+            NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
+            !completionHandle?:completionHandle(NO, error);
+            return;
+        }
+    }
     [viewController presentViewController:[[MLNavigationViewController alloc] initWithRootViewController:self] animated:YES completion:nil];
-}
-
-- (void)display
-{
-    [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:[[MLNavigationViewController alloc] initWithRootViewController:self] animated:YES completion:nil];
 }
 
 + (instancetype)new
@@ -77,18 +89,17 @@ static NSUInteger kDefaultMaxCount = 9;
 
 - (void)setupPickerData
 {
-    //    if (gtiOS8) {
-    //        // PhotoKit
-    //
-    //    } else {
-    // AssetsLibrary
-    WeakSelf
-    MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
-    [pickerData getAllGroup:^(NSArray *groups) {
-        weakSelf.groups = groups;
-        [weakSelf groupsWithAsset:groups];
-    }];
-    //    }
+    if (gtiOS8) {
+        // PhotoKit
+        
+    } else {
+        WeakSelf
+        MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
+        [pickerData getAllGroup:^(NSArray *groups) {
+            weakSelf.groups = groups;
+            [weakSelf groupsWithAsset:groups];
+        }];
+    }
 }
 
 - (void)groupsWithAsset:(NSArray *)groups

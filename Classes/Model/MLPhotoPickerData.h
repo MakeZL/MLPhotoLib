@@ -15,6 +15,11 @@ typedef void(^MLPhotoPickerDataPhotoCallBack)(NSArray *array);
 @class MLPhotoPickerGroup;
 @interface MLPhotoPickerData : NSObject
 
+/// 判断有没有获取相册的权限
++ (BOOL)judgeIsHavePhotoAblumAuthority;
+/// 判断有没有拍照的权限
++ (BOOL)judgeIsHaveCameraAuthority;
+
 + (instancetype)pickerData;
 /// 获取所有相册组
 - (void)getAllGroup:(MLPhotoPickerDataPhotoCallBack)callBack;

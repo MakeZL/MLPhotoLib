@@ -25,7 +25,11 @@
 - (IBAction)actionOpenAlbum
 {
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
-    [pickerVC displayForVC:self];
+    [pickerVC displayForVC:self completionHandle:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@" --- 打开相册成功");
+        }
+    }];
 }
 
 - (IBAction)actionQuickPrev

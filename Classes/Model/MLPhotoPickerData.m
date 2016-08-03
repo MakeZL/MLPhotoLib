@@ -6,9 +6,10 @@
 //  Copyright © 2016年 Free. All rights reserved.
 //
 
-#import "MLPhotoPickerData.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVFoundation.h>
+#import "MLPhotoPickerData.h"
 
 @interface MLPhotoPickerData ()
 @property (nonatomic , strong)ALAssetsLibrary *library;
@@ -39,6 +40,26 @@
 #pragma mark - getter
 + (instancetype)pickerData{
     return [[self alloc] init];
+}
+
+#pragma mark - 判断有没有获取相册的权限
++ (BOOL)judgeIsHavePhotoAblumAuthority
+{
+    ALAuthorizationStatus state = [ALAssetsLibrary authorizationStatus];
+    if (state == ALAuthorizationStatusRestricted || state == ALAuthorizationStatusDenied) {
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - 判断有没有获取相册的权限
++ (BOOL)judgeIsHaveCameraAuthority
+{
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusRestricted || status == AVAuthorizationStatusDenied) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark -获取所有组

@@ -11,5 +11,9 @@
 
 // >= iOS8
 @interface MLPhotoKitData : NSObject
+#pragma mark - 判断获取相机、拍照权限
++ (BOOL)judgeIsHavePhotoAblumAuthority;
++ (BOOL)judgeIsHaveCameraAuthority;
+
 
 @end
