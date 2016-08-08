@@ -26,4 +26,9 @@
     }
     return _selectsUrls;
 }
+
++ (void)clear
+{
+    [[[self manager] selectsUrls] removeAllObjects];
+}
 @end

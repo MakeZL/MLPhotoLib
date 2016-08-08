@@ -272,6 +272,8 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 - (void)tappendDoneBtn
 {
     !self.completion?:self.completion(YES, self.pickerManager.selectsUrls, nil);
+    // Clear Select Data.
+    [MLPhotoPickerManager clear];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

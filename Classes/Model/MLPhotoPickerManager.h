@@ -13,6 +13,7 @@
 
 @interface MLPhotoPickerManager : NSObject
 + (instancetype)manager;
++ (void)clear;
 
 @property (nonatomic, strong) NSMutableArray *selectsUrls;
 @end
