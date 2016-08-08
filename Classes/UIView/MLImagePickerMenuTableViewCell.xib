@@ -21,7 +21,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="( 3 )" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CI5-hW-DkF">
-                        <rect key="frame" x="62.5" y="17" width="24.5" height="16"/>
+                        <rect key="frame" x="62" y="17" width="24.5" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -33,10 +33,19 @@
                             <constraint firstAttribute="height" constant="0.5" id="9p3-cd-nsb"/>
                         </constraints>
                     </view>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S6c-Mv-YGJ">
+                        <rect key="frame" x="293" y="19" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="a92-IN-sXs"/>
+                            <constraint firstAttribute="width" constant="12" id="rum-lY-zAW"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="pF3-Hw-TqN" secondAttribute="trailing" id="2EN-bb-b6v"/>
                     <constraint firstItem="pF3-Hw-TqN" firstAttribute="leading" secondItem="Zre-t3-fnT" secondAttribute="leading" id="4N2-G3-mq7"/>
+                    <constraint firstAttribute="trailing" secondItem="S6c-Mv-YGJ" secondAttribute="trailing" constant="15" id="7F3-7r-c7A"/>
+                    <constraint firstItem="S6c-Mv-YGJ" firstAttribute="centerY" secondItem="Zre-t3-fnT" secondAttribute="centerY" id="F2O-5b-llX"/>
                     <constraint firstItem="CI5-hW-DkF" firstAttribute="leading" secondItem="sZB-rD-Eg5" secondAttribute="trailing" constant="10" id="e1f-G3-xP0"/>
                     <constraint firstAttribute="bottom" secondItem="pF3-Hw-TqN" secondAttribute="bottom" id="gpZ-yU-LtZ"/>
                     <constraint firstItem="sZB-rD-Eg5" firstAttribute="centerY" secondItem="Zre-t3-fnT" secondAttribute="centerY" id="lL5-6w-fsB"/>
@@ -46,6 +55,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="assetCountLbl" destination="CI5-hW-DkF" id="5bX-Wa-xko"/>
+                <outlet property="tagImageView" destination="S6c-Mv-YGJ" id="oHj-kW-Kf9"/>
                 <outlet property="titleLbl" destination="sZB-rD-Eg5" id="XjK-DF-xJk"/>
             </connections>
             <point key="canvasLocation" x="368" y="357"/>

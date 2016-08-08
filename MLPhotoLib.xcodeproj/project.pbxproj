@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4218BA111D585A6F005DC686 /* MLImagePickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4218BA101D585A6F005DC686 /* MLImagePickerController.bundle */; };
 		4274E4491D4F21C0001D39C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4274E4481D4F21C0001D39C3 /* main.m */; };
 		4274E44C1D4F21C0001D39C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4274E44B1D4F21C0001D39C3 /* AppDelegate.m */; };
 		4274E44F1D4F21C0001D39C3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4274E44E1D4F21C0001D39C3 /* ViewController.m */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4218BA101D585A6F005DC686 /* MLImagePickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MLImagePickerController.bundle; sourceTree = "<group>"; };
 		4274E4441D4F21C0001D39C3 /* MLPhotoLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MLPhotoLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4274E4481D4F21C0001D39C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4274E44A1D4F21C0001D39C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 		428097011D51AA7E008542BB /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4218BA101D585A6F005DC686 /* MLImagePickerController.bundle */,
 				428097021D51AA7E008542BB /* Model */,
 				4280970B1D51AA7E008542BB /* UIView */,
 				428097141D51AA7E008542BB /* UIViewController */,
@@ -336,6 +339,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4218BA111D585A6F005DC686 /* MLImagePickerController.bundle in Resources */,
 				4274E4571D4F21C0001D39C3 /* LaunchScreen.storyboard in Resources */,
 				428097221D51AA7E008542BB /* MLImagePickerMenuTableViewCell.xib in Resources */,
 				428097201D51AA7E008542BB /* MLImagePickerCollectionViewCell.xib in Resources */,

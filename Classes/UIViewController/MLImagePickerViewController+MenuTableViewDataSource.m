@@ -31,9 +31,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self reloadCollectionViewWithGroup:[self.groups objectAtIndex:indexPath.row]];
     [self tappendTitleView];
+    
+    // 更新Cell状态
+    MLImagePickerMenuTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:YES];
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // 更新Cell状态
+    MLImagePickerMenuTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:NO];
 }
 
 @end

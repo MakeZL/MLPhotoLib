@@ -15,6 +15,7 @@
     [super awakeFromNib];
     
     self.hidden = YES;
+    [self.tagButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_icon_image_no"] forState:UIControlStateNormal];
 }
 
 - (void)setAsset:(MLPhotoAsset *)asset

@@ -13,6 +13,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLbl;
 @property (weak, nonatomic) IBOutlet UILabel *assetCountLbl;
+@property (weak, nonatomic) IBOutlet UIImageView *tagImageView;
 
 @property (nonatomic, strong) MLPhotoPickerGroup *group;
+
 @end

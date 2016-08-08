@@ -24,9 +24,9 @@
 
 static NSUInteger kDefaultMaxCount = 9;
 static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
-static CGFloat MLImagePickerCellMargin = 2;
-static CGFloat MLImagePickerCellRowCount = 4;
-static NSInteger MLImagePickerMaxCount = 9;
+//static CGFloat MLImagePickerCellMargin = 2;
+//static CGFloat MLImagePickerCellRowCount = 4;
+//static NSInteger MLImagePickerMaxCount = 9;
 
 
 @interface MLImagePickerViewController ()
