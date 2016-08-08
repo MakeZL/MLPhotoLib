@@ -18,4 +18,12 @@
     });
     return instance;
 }
+
+- (NSMutableArray *)selectsUrls
+{
+    if (!_selectsUrls) {
+        _selectsUrls = @[].mutableCopy;
+    }
+    return _selectsUrls;
+}
 @end

@@ -13,7 +13,7 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="99" height="99"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c7z-sg-jl8">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c7z-sg-jl8">
                         <rect key="frame" x="0.0" y="0.0" width="99" height="99"/>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k9h-Az-Tx1">
@@ -22,6 +22,9 @@
                             <constraint firstAttribute="width" constant="23" id="6ry-1m-Pap"/>
                             <constraint firstAttribute="height" constant="23" id="uvb-WA-Yqp"/>
                         </constraints>
+                        <connections>
+                            <action selector="tagBtnClick" destination="gTV-IL-0wX" eventType="touchUpInside" id="XdR-Ln-04m"/>
+                        </connections>
                     </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

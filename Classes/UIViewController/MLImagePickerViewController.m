@@ -16,6 +16,7 @@
 #import "MLPhotoKitData.h"
 #import "MLPhotoPickerAssetsManager.h"
 #import "MLPhotoAsset.h"
+#import "MLPhotoPickerManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 //#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
@@ -28,34 +29,39 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
 //static CGFloat MLImagePickerCellRowCount = 4;
 //static NSInteger MLImagePickerMaxCount = 9;
 
+typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 @interface MLImagePickerViewController ()
 @property (nonatomic, weak) UITableView *groupTableView;
 @property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
 @property (nonatomic, strong) MLPhotoPickerAssetsManager *imageManager;
+@property (nonatomic, strong) MLPhotoPickerManager *pickerManager;
 @property (nonatomic, strong) PHFetchResult *fetchResult;
+
+@property (nonatomic, copy) completionHandle completion;
 @end
 
 @implementation MLImagePickerViewController
 
-- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success, NSError *error))completionHandle
+- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void (^)(BOOL, NSArray *, NSError *))completionHandle
 {
     if (gtiOS8)
     {
         if (![MLPhotoKitData judgeIsHavePhotoAblumAuthority])
         {
             NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
-            !completionHandle?:completionHandle(NO, error);
+            !completionHandle?:completionHandle(NO, nil, error);
             return;
         }
     } else {
         if (![MLPhotoPickerData judgeIsHavePhotoAblumAuthority])
         {
             NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
-            !completionHandle?:completionHandle(NO, error);
+            !completionHandle?:completionHandle(NO, nil, error);
             return;
         }
     }
+    self.completion = completionHandle;
     [viewController presentViewController:[[MLNavigationViewController alloc] initWithRootViewController:self] animated:YES completion:nil];
 }
 
@@ -94,8 +100,10 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationItem.titleView = [self setupTitleView];
+    [self setupRightView];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self setupRightView]];
     
-    [self.view addSubview:_contentCollectionView = [[MLPhotoPickerCollectionView alloc] initWithFrame:(CGRect){CGPointMake(0, 30), CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)}]];
+    [self.view addSubview:_contentCollectionView = [[MLPhotoPickerCollectionView alloc] initWithFrame:(CGRect){CGPointMake(0, 34), CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)}]];
 }
 
 - (void)setupPickerData
@@ -117,6 +125,8 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
             asset.asset = self.fetchResult[i];
             [assets addObject:asset];
+            
+            
 //            PHAsset *asset = self.fetchResult[i];
 //            self.photoIdentifiers.append(asset.localIdentifier)
             
@@ -161,7 +171,10 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
 - (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group
 {
     if (gtiOS8) {
-        self.fetchResult = [PHAsset fetchAssetsInAssetCollection:group.collection options:nil];
+        PHFetchOptions *options = [[PHFetchOptions alloc] init];
+        [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
+        self.fetchResult = [PHAsset fetchAssetsInAssetCollection:group.collection options:options];
+        
         NSMutableArray *assets = [NSMutableArray arrayWithCapacity:self.fetchResult.count];
         for (NSInteger i = 0; i < self.fetchResult.count; i++){
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
@@ -183,22 +196,83 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
     }
 }
 
-- (UIButton *)setupTitleView
+- (UIView *)setupTitleView
 {
+    UIView *titleView = [[UIView alloc] init];
+    titleView.frame = CGRectMake(0, 0, 200, 44);
     UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    titleButton.frame = titleView.frame;
     titleButton.titleLabel.font = [UIFont systemFontOfSize:14];
     titleButton.adjustsImageWhenHighlighted = NO;
-    [titleButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [titleButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_xialajiantou"] forState:UIControlStateNormal];
+    [titleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    [titleButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     [titleButton setTitle:@"相机胶卷" forState:UIControlStateNormal];
     [titleButton addTarget:self action:@selector(tappendTitleView) forControlEvents:UIControlEventTouchUpInside];
-    return titleButton;
+    [titleView addSubview:titleButton];
+    return titleView;
+}
+
+- (void)setupRightView
+{
+    UIView *rightView = [[UIView alloc] init];
+    rightView.frame = CGRectMake(0, 0, 40, 44);
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [rightBtn setFrame:rightView.frame];
+    [rightBtn setTitle:@"完成" forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
+    [rightView addSubview:rightBtn];
+    [self.navigationController.navigationBar addSubview:rightView];
+//    return rightView;
+}
+
+- (void)setupGroup
+{
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
+    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:options];
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
+    
+    NSMutableArray *groups = @[].mutableCopy;
+    NSArray *collections = @[allPhotos,smartAlbums,userCollections];
+    for (PHFetchResult *result in collections)
+    {
+        for (PHAssetCollection *collection in result)
+        {
+            if ([collection isKindOfClass:[PHAssetCollection class]])
+            {
+                // Filter empty Assets.
+                PHFetchResult *collectionResult = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+                if (collectionResult.count > 0)
+                {
+                    MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
+                    group.collection = collection;
+                    [groups addObject:group];
+                }
+            }
+        }
+    }
+    self.groups = groups;
 }
 
 - (void)tappendTitleView
 {
+    UIView *titleView = self.navigationItem.titleView;
+    UIButton *titleBtn = [[titleView subviews] lastObject];
+    
     [UIView animateWithDuration:0.25 animations:^{
+        titleBtn.imageView.transform = (self.groupTableView.alpha == 1.0) ? CGAffineTransformMakeRotation(0) : CGAffineTransformMakeRotation(M_PI);
         self.groupTableView.alpha = (self.groupTableView.alpha == 1.0) ? 0.0 : 1.0;
     }];
+}
+
+- (void)tappendDoneBtn
+{
+    !self.completion?:self.completion(YES, self.pickerManager.selectsUrls, nil);
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UITableView *)groupTableView
@@ -221,30 +295,12 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
     return _groupTableView;
 }
 
-- (void)setupGroup
+- (MLPhotoPickerManager *)pickerManager
 {
-    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-    [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
-    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:options];
-    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
-    
-    NSMutableArray *groups = @[].mutableCopy;
-    NSArray *collections = @[allPhotos,smartAlbums,userCollections];
-    for (PHFetchResult *result in collections) {
-        for (PHAssetCollection *collection in result) {
-            if ([collection isKindOfClass:[PHAssetCollection class]]) {
-                MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
-                group.collection = collection;
-                [groups addObject:group];
-            }
-        }
+    if (!_pickerManager) {
+        _pickerManager = [MLPhotoPickerManager manager];
     }
-    self.groups = groups;
+    return _pickerManager;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 @end

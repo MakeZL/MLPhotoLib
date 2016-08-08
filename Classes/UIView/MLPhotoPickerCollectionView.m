@@ -8,6 +8,7 @@
 
 #import "MLPhotoPickerCollectionView.h"
 #import "MLImagePickerCollectionViewCell.h"
+#import "MLPhotoPickerManager.h"
 
 static NSInteger kShowRowCellCount = 4;
 

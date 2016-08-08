@@ -20,5 +20,5 @@
 /// Limit Max Picker Count
 @property (nonatomic, assign) NSUInteger maxCount;
 /// Show In viewController
-- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success, NSError *error))completionHandle;
+- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success,NSArray *assets,NSError *error))completionHandle;
 @end

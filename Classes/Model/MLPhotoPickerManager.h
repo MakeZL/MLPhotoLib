@@ -10,6 +10,7 @@
 
 #define gtiOS8 ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
 #define WeakSelf __weak typeof(self)weakSelf = self;
+
 @interface MLPhotoPickerManager : NSObject
 + (instancetype)manager;
 

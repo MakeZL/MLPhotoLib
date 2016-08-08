@@ -79,22 +79,39 @@ static CGFloat MLImagePickerCellRowCount = 4;
 
 - (UIImage *)thumbImage
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored"-Wdeprecated"
     return self.isUIImage ? _thumbImage : [UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]];
+#pragma clang diagnostic pop
 }
 
 - (UIImage *)originImage
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored"-Wdeprecated"
     return self.isUIImage ? _originImage : [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
+#pragma clang diagnostic pop
 }
 
 - (BOOL)isVideoType{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored"-Wdeprecated"
     NSString *type = [self.asset valueForProperty:ALAssetPropertyType];
     //媒体类型是视频
     return [type isEqualToString:ALAssetTypeVideo];
+#pragma clang diagnostic pop
 }
 
-- (NSURL *)assetURL{
+- (NSURL *)assetURL
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored"-Wdeprecated"
+    if (self.isPHAsset) {
+        PHAssetResource *resource = [PHAssetResource assetResourcesForAsset:self.asset].firstObject;
+        return [resource valueForKey:@"_fileURL"];
+    }
     return [[self.asset defaultRepresentation] url];
+#pragma clang diagnostic pop
 }
 
 @end

@@ -14,4 +14,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *tagButton;
 
 @property (strong, nonatomic) MLPhotoAsset *asset;
+
 @end
