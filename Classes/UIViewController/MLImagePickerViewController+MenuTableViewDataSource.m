@@ -8,6 +8,7 @@
 
 #import "MLImagePickerViewController+MenuTableViewDataSource.h"
 #import "MLImagePickerMenuTableViewCell.h"
+#import <Photos/Photos.h>
 
 @implementation MLImagePickerViewController (MenuTableViewDataSource) 
 

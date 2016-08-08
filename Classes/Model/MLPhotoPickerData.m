@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
 #import "MLPhotoPickerData.h"
+#import "MLPhotoAsset.h"
 
 @interface MLPhotoPickerData ()
 @property (nonatomic , strong)ALAssetsLibrary *library;
@@ -178,4 +179,28 @@
 
 @end
 
-@implementation MLPhotoPickerGroup @end
+@implementation MLPhotoPickerGroup
+
+- (NSString *)groupName
+{
+    if ([self isPhotos]) {
+        return self.collection.localizedTitle;
+    }
+    return _groupName;
+}
+
+- (NSInteger)assetsCount
+{
+    if ([self isPhotos]) {
+        PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:self.collection options:nil];
+        return result.count;
+    }
+    return _assetsCount;
+}
+
+- (BOOL)isPhotos
+{
+    return self.collection != nil;
+}
+
+@end

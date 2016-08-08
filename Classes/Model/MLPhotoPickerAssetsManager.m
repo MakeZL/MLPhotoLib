@@ -10,6 +10,16 @@
 
 @implementation MLPhotoPickerAssetsManager
 
++ (instancetype)manager
+{
+    static id instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
 - (PHFetchResult *)fetchResult
 {
     if (!_fetchResult)

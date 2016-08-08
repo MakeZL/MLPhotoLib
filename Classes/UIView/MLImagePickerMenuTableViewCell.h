@@ -11,7 +11,6 @@
 @class MLPhotoPickerGroup;
 @interface MLImagePickerMenuTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLbl;
 @property (weak, nonatomic) IBOutlet UILabel *assetCountLbl;
 

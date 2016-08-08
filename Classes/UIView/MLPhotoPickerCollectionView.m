@@ -60,6 +60,7 @@ static NSInteger kShowRowCellCount = 4;
     MLImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MLImagePickerCollectionViewCell class]) forIndexPath:indexPath];
     if (self.albumAssets.count > indexPath.item) {
         cell.asset = [self.albumAssets objectAtIndex:indexPath.item];
+        
     }
     return cell;
 }

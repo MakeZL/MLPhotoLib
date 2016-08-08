@@ -22,7 +22,9 @@
     _asset = asset;
     
     self.hidden = NO;
-    self.imageView.image = [asset thumbImage];
+    [asset getThumbImageWithCompletion:^(UIImage *image) {
+        self.imageView.image = image;
+    }];
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Photos/Photos.h>
 
 ///iOS8之前
 // 选择相片完回调
@@ -48,6 +49,8 @@ typedef void(^MLPhotoPickerDataPhotoCallBack)(NSArray *array);
 @property (strong,nonatomic) NSNumber *type;
 // 包装的group
 @property (strong,nonatomic) ALAssetsGroup *group;
+// iOS8 > 用这个
+@property (strong,nonatomic) PHAssetCollection *collection;
 // 是否是视频
 @property (assign,nonatomic) BOOL isVideo;
 @end

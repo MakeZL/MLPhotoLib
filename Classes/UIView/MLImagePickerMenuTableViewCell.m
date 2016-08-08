@@ -8,13 +8,14 @@
 
 #import "MLImagePickerMenuTableViewCell.h"
 #import "MLPhotoPickerData.h"
+#import "MLPhotoPickerManager.h"
+#import <Photos/Photos.h>
 
 @implementation MLImagePickerMenuTableViewCell
 - (void)setGroup:(MLPhotoPickerGroup *)group
 {
     _group = group;
     
-    self.iconImageView.image = [group thumbImage];
     self.titleLbl.text = [group groupName];
     self.assetCountLbl.text = [NSString stringWithFormat:@"( %ld )",[group assetsCount]];
 }

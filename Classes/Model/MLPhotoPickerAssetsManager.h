@@ -9,5 +9,6 @@
 #import <Photos/Photos.h>
 
 @interface MLPhotoPickerAssetsManager : PHCachingImageManager
++ (instancetype)manager;
 @property (nonatomic, strong) PHFetchResult *fetchResult;
 @end

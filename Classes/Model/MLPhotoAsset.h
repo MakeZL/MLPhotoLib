@@ -8,18 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
+#import "MLPhotoPickerAssetsManager.h"
 
 @interface MLPhotoAsset : NSObject
 
 + (instancetype)assetWithImage:(UIImage *)image;
 
-@property (strong,nonatomic) ALAsset *asset;
-// 比例图
-@property (nonatomic, strong) UIImage *aspectRatioImage;
-// 缩略图
-@property (nonatomic, strong) UIImage *thumbImage;
-// 原图
-@property (nonatomic, strong) UIImage *originImage;
+@property (assign, nonatomic) BOOL isPHAsset;
+// PHAsset/ALAsset
+@property (strong, nonatomic) id asset;
+
++ (void)getAssetWithThumbImage:(PHAsset *)asset completion:(void(^)(UIImage *))completion;
+- (void)getThumbImageWithCompletion:(void(^)(UIImage *))completion;
+- (void)getOriginImageWithCompletion:(void(^)(UIImage *))completion;
+
 // 是否是视频类型
 @property (assign,nonatomic) BOOL isVideoType;
 @property (weak,nonatomic) UIImageView *toView;

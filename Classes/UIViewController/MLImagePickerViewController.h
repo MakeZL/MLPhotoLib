@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MLPhotoPickerManager.h"
 
 @class MLPhotoPickerGroup;
 @interface MLImagePickerViewController : UIViewController

@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MLPhotoAsset.h"
 
-@class MLPhotoAsset;
 @interface MLImagePickerCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *tagButton;

@@ -13,15 +13,14 @@
 #import "MLPhotoPickerCollectionView.h"
 #import "MLImagePickerMenuTableViewCell.h"
 #import "MLPhotoPickerData.h"
-#import "MLPhotoPickerManager.h"
 #import "MLPhotoKitData.h"
 #import "MLPhotoPickerAssetsManager.h"
 #import "MLPhotoAsset.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
-#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
-#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
+//#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
+//#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
+//#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
 
 static NSUInteger kDefaultMaxCount = 9;
 static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
@@ -113,8 +112,12 @@ static NSInteger MLImagePickerMaxCount = 9;
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         requestOptions.networkAccessAllowed = YES;
         
+        NSMutableArray *assets = @[].mutableCopy;
         for (NSInteger i = 0; i < self.fetchResult.count; i++){
-            PHAsset *asset = self.fetchResult[i];
+            MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
+            asset.asset = self.fetchResult[i];
+            [assets addObject:asset];
+//            PHAsset *asset = self.fetchResult[i];
 //            self.photoIdentifiers.append(asset.localIdentifier)
             
 //            if self.selectIndentifiers.contains(asset.localIdentifier) == true {
@@ -126,6 +129,8 @@ static NSInteger MLImagePickerMaxCount = 9;
 //                }
 //            }
         }
+        
+        self.contentCollectionView.albumAssets = assets;
 //        self.collectionView?.reloadData()
 //        self.collectionView?.layoutIfNeeded()
 //        if self.cancleLongGestureScrollSelectedPicker == false {
@@ -188,6 +193,11 @@ static NSInteger MLImagePickerMaxCount = 9;
 - (UITableView *)groupTableView
 {
     if (!_groupTableView) {
+        
+        if (gtiOS8) {
+            [self setupGroup];
+        }
+        
         UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
         groupTableView.alpha = 0.0;
         groupTableView.backgroundColor = [UIColor whiteColor];
@@ -198,6 +208,28 @@ static NSInteger MLImagePickerMaxCount = 9;
         [self.view addSubview:_groupTableView = groupTableView];
     }
     return _groupTableView;
+}
+
+- (void)setupGroup
+{
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
+    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:options];
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
+    
+    NSMutableArray *groups = @[].mutableCopy;
+    NSArray *collections = @[allPhotos, smartAlbums, userCollections];
+    for (PHFetchResult *result in collections) {
+        for (PHAssetCollection *collection in result) {
+            if ([collection isKindOfClass:[PHAssetCollection class]]) {
+                MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
+                group.collection = collection;
+                [groups addObject:group];
+            }
+        }
+    }
+    self.groups = groups;
 }
 
 - (void)didReceiveMemoryWarning {
