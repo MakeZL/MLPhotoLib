@@ -160,16 +160,27 @@ static NSInteger MLImagePickerMaxCount = 9;
 
 - (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group
 {
-    WeakSelf
-    [[MLPhotoPickerData pickerData] getGroupPhotosWithGroup:group finished:^(NSArray *assets) {
-        NSMutableArray *tmpArrayM = [NSMutableArray arrayWithCapacity:assets.count];
-        for (ALAsset *asset in assets) {
-            __block MLPhotoAsset *mlAsset = [[MLPhotoAsset alloc] init];
-            mlAsset.asset = asset;
-            [tmpArrayM addObject:mlAsset];
+    if (gtiOS8) {
+        self.fetchResult = [PHAsset fetchAssetsInAssetCollection:group.collection options:nil];
+        NSMutableArray *assets = [NSMutableArray arrayWithCapacity:self.fetchResult.count];
+        for (NSInteger i = 0; i < self.fetchResult.count; i++){
+            MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
+            asset.asset = self.fetchResult[i];
+            [assets addObject:asset];
         }
-        weakSelf.contentCollectionView.albumAssets = tmpArrayM;
-    }];
+        self.contentCollectionView.albumAssets = assets;
+    } else {
+        WeakSelf
+        [[MLPhotoPickerData pickerData] getGroupPhotosWithGroup:group finished:^(NSArray *assets) {
+            NSMutableArray *tmpArrayM = [NSMutableArray arrayWithCapacity:assets.count];
+            for (ALAsset *asset in assets) {
+                __block MLPhotoAsset *mlAsset = [[MLPhotoAsset alloc] init];
+                mlAsset.asset = asset;
+                [tmpArrayM addObject:mlAsset];
+            }
+            weakSelf.contentCollectionView.albumAssets = tmpArrayM;
+        }];
+    }
 }
 
 - (UIButton *)setupTitleView
@@ -219,7 +230,7 @@ static NSInteger MLImagePickerMaxCount = 9;
     PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
     
     NSMutableArray *groups = @[].mutableCopy;
-    NSArray *collections = @[allPhotos, smartAlbums, userCollections];
+    NSArray *collections = @[allPhotos,smartAlbums,userCollections];
     for (PHFetchResult *result in collections) {
         for (PHAssetCollection *collection in result) {
             if ([collection isKindOfClass:[PHAssetCollection class]]) {
