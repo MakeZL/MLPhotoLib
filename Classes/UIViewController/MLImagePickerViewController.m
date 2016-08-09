@@ -17,11 +17,13 @@
 #import "MLPhotoPickerAssetsManager.h"
 #import "MLPhotoAsset.h"
 #import "MLPhotoPickerManager.h"
-#import <AssetsLibrary/AssetsLibrary.h>
+#import "UIButton+Animation.h"
 
 typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArray<UIImage *>*thumbImages, NSArray<UIImage *>*originalImages, NSError *error);
 
 @interface MLImagePickerViewController ()
+
+@property (nonatomic, weak) UIView *groupView;
 @property (nonatomic, weak) UITableView *groupTableView;
 @property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
 @property (nonatomic, weak) UIButton *tagRightBtn;
@@ -259,15 +261,30 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     return ({
         if (!_groupTableView) {
             UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
-            groupTableView.alpha = 0.0;
             groupTableView.backgroundColor = [UIColor whiteColor];
             groupTableView.dataSource = self;
             groupTableView.delegate = self;
             groupTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             [groupTableView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerMenuTableViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([MLImagePickerMenuTableViewCell class])];
-            [self.view addSubview:_groupTableView = groupTableView];
+            [self.groupView addSubview:_groupTableView = groupTableView];
         }
         _groupTableView;
+    });
+}
+
+- (UIView *)groupView
+{
+    return ({
+        if (!_groupView) {
+            UIView *groupView = [[UIView alloc] initWithFrame:self.view.bounds];
+            groupView.alpha = 0.0;
+            groupView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+            [groupView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappendTitleView)]];
+            [self.view addSubview:_groupView = groupView];
+            
+            [self groupTableView];
+        }
+        _groupView;
     });
 }
 
@@ -307,8 +324,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         UIButton *titleBtn = [[titleView subviews] lastObject];
         
         [UIView animateWithDuration:0.25 animations:^{
-            titleBtn.imageView.transform = (self.groupTableView.alpha == 1.0) ? CGAffineTransformMakeRotation(0) : CGAffineTransformMakeRotation(M_PI);
-            self.groupTableView.alpha = (self.groupTableView.alpha == 1.0) ? 0.0 : 1.0;
+            titleBtn.imageView.transform = (self.groupView.alpha == 1.0) ? CGAffineTransformMakeRotation(0) : CGAffineTransformMakeRotation(M_PI);
+            self.groupView.alpha = (self.groupView.alpha == 1.0) ? 0.0 : 1.0;
         }];
     });
 }
@@ -326,6 +343,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     NSInteger selectsUrlsCount = [MLPhotoPickerManager manager].selectsUrls.count;
     self.tagRightBtn.hidden = (selectsUrlsCount < 1);
     [self.tagRightBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
+    
+    [self.tagRightBtn startScaleAnimation];
 }
 
 - (void)dealloc

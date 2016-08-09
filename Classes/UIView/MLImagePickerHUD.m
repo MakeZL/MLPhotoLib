@@ -12,7 +12,7 @@
 
 + (void)showMessage:(NSString *)message
 {
-    [self showMessage:message duration:0.4];
+    [self showMessage:message duration:0.5];
 }
 
 + (void)showMessage:(NSString *)message duration:(CGFloat)duration
@@ -51,6 +51,11 @@
             [hud removeFromSuperview];
         }];
     }];
+}
+
++ (void)startScaleBtnAnimation:(UIButton *)btn
+{
+    
 }
 
 @end

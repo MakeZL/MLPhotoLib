@@ -29,6 +29,7 @@
 		428097251D51AA7E008542BB /* MLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 428097181D51AA7E008542BB /* MLImagePickerViewController.m */; };
 		428097261D51AA7E008542BB /* MLNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4280971A1D51AA7E008542BB /* MLNavigationViewController.m */; };
 		429C864A1D59B10300DBFF16 /* MLImagePickerHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 429C86491D59B10300DBFF16 /* MLImagePickerHUD.m */; };
+		4844E1C01D5A1EA40001B717 /* UIButton+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4844E1BF1D5A1EA40001B717 /* UIButton+Animation.m */; };
 		48D20D181D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D20D171D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,8 @@
 		4280971A1D51AA7E008542BB /* MLNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNavigationViewController.m; sourceTree = "<group>"; };
 		429C86481D59B10300DBFF16 /* MLImagePickerHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLImagePickerHUD.h; sourceTree = "<group>"; };
 		429C86491D59B10300DBFF16 /* MLImagePickerHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLImagePickerHUD.m; sourceTree = "<group>"; };
+		4844E1BE1D5A1EA40001B717 /* UIButton+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Animation.h"; sourceTree = "<group>"; };
+		4844E1BF1D5A1EA40001B717 /* UIButton+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Animation.m"; sourceTree = "<group>"; };
 		48D20D161D5245CF002F78C9 /* MLPhotoPickerAssetsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPhotoPickerAssetsManager.h; sourceTree = "<group>"; };
 		48D20D171D5245CF002F78C9 /* MLPhotoPickerAssetsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLPhotoPickerAssetsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -224,6 +227,8 @@
 				428097131D51AA7E008542BB /* MLPhotoPickerCollectionView.m */,
 				429C86481D59B10300DBFF16 /* MLImagePickerHUD.h */,
 				429C86491D59B10300DBFF16 /* MLImagePickerHUD.m */,
+				4844E1BE1D5A1EA40001B717 /* UIButton+Animation.h */,
+				4844E1BF1D5A1EA40001B717 /* UIButton+Animation.m */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -379,6 +384,7 @@
 				4280971C1D51AA7E008542BB /* MLPhotoKitData.m in Sources */,
 				4280971B1D51AA7E008542BB /* MLPhotoAsset.m in Sources */,
 				428097261D51AA7E008542BB /* MLNavigationViewController.m in Sources */,
+				4844E1C01D5A1EA40001B717 /* UIButton+Animation.m in Sources */,
 				428097211D51AA7E008542BB /* MLImagePickerMenuTableViewCell.m in Sources */,
 				4274E44F1D4F21C0001D39C3 /* ViewController.m in Sources */,
 				4280971E1D51AA7E008542BB /* MLPhotoPickerManager.m in Sources */,

@@ -10,6 +10,7 @@
 #import "MLPhotoPickerManager.h"
 #import "MLImagePickerHUD.h"
 #import "MLPhotoAsset.h"
+#import "UIButton+Animation.h"
 
 @implementation MLImagePickerCollectionViewCell
 
@@ -114,7 +115,10 @@
     BOOL isSelected = [manager.selectsUrls containsObject:[self.asset assetURL]];
     self.tagButton.selected = isSelected;
     
+    [self.tagButton startScaleAnimation];
+    
     // refresh selectUrl count;
     [[NSNotificationCenter defaultCenter] postNotificationName:MLNotificationDidChangeSelectUrl object:nil];
 }
+
 @end
