@@ -19,16 +19,6 @@
 #import "MLPhotoPickerManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-//#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
-//#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
-//#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
-
-static NSUInteger kDefaultMaxCount = 9;
-static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
-//static CGFloat MLImagePickerCellMargin = 2;
-//static CGFloat MLImagePickerCellRowCount = 4;
-//static NSInteger MLImagePickerMaxCount = 9;
-
 typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArray<UIImage *>*thumbImages, NSArray<UIImage *>*originalImages, NSError *error);
 
 @interface MLImagePickerViewController ()
@@ -78,7 +68,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.maxCount = kDefaultMaxCount;
+        self.maxCount = MLDefaultMaxCount;
     }
     return self;
 }
@@ -99,21 +89,17 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)setupSubviews
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.navigationItem.titleView = [self setupTitleView];
-    [self setupRightView];
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[self setupRightView]];
-    
+    self.navigationItem.titleView = [self addTitleView];
+    [self addNavigationBarRightView];
     [self.view addSubview:_contentCollectionView = [[MLPhotoPickerCollectionView alloc] initWithFrame:(CGRect){CGPointMake(0, 34), CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)}]];
 }
 
 - (void)setupPickerData
 {
     if (gtiOS8) {
-        
         self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
         self.fetchResult = [self.imageManager fetchResult];
-        MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
-        
+
         PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         requestOptions.networkAccessAllowed = YES;
@@ -134,6 +120,36 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             [weakSelf groupsWithAsset:groups];
         }];
     }
+}
+
+- (void)setupGroup
+{
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
+    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:options];
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
+    
+    NSMutableArray *groups = @[].mutableCopy;
+    NSArray *collections = @[allPhotos,smartAlbums,userCollections];
+    for (PHFetchResult *result in collections)
+    {
+        for (PHAssetCollection *collection in result)
+        {
+            if ([collection isKindOfClass:[PHAssetCollection class]])
+            {
+                // Filter empty Assets.
+                PHFetchResult *collectionResult = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+                if (collectionResult.count > 0)
+                {
+                    MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
+                    group.collection = collection;
+                    [groups addObject:group];
+                }
+            }
+        }
+    }
+    self.groups = groups;
 }
 
 - (void)groupsWithAsset:(NSArray *)groups
@@ -176,24 +192,27 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     }
 }
 
-- (UIView *)setupTitleView
+#pragma mark - lazy
+- (UIView *)addTitleView
 {
-    UIView *titleView = [[UIView alloc] init];
-    titleView.frame = CGRectMake(0, 0, 200, 44);
-    UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    titleButton.frame = titleView.frame;
-    titleButton.titleLabel.font = [UIFont systemFontOfSize:14];
-    titleButton.adjustsImageWhenHighlighted = NO;
-    [titleButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_xialajiantou"] forState:UIControlStateNormal];
-    [titleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    [titleButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [titleButton setTitle:@"相机胶卷" forState:UIControlStateNormal];
-    [titleButton addTarget:self action:@selector(tappendTitleView) forControlEvents:UIControlEventTouchUpInside];
-    [titleView addSubview:titleButton];
-    return titleView;
+    return ({
+        UIView *titleView = [[UIView alloc] init];
+        titleView.frame = CGRectMake(0, 0, 200, 44);
+        UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        titleButton.frame = titleView.frame;
+        titleButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        titleButton.adjustsImageWhenHighlighted = NO;
+        [titleButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_xialajiantou"] forState:UIControlStateNormal];
+        [titleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+        [titleButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [titleButton setTitle:@"相机胶卷" forState:UIControlStateNormal];
+        [titleButton addTarget:self action:@selector(tappendTitleView) forControlEvents:UIControlEventTouchUpInside];
+        [titleView addSubview:titleButton];
+        titleView;
+    });
 }
 
-- (void)setupRightView
+- (void)addNavigationBarRightView
 {
     ({
         UIView *rightView = [[UIView alloc] init];
@@ -209,73 +228,24 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     });
 }
 
-- (void)setupGroup
-{
-    PHFetchOptions *options = [[PHFetchOptions alloc] init];
-    [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
-    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:options];
-    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
-    
-    NSMutableArray *groups = @[].mutableCopy;
-    NSArray *collections = @[allPhotos,smartAlbums,userCollections];
-    for (PHFetchResult *result in collections)
-    {
-        for (PHAssetCollection *collection in result)
-        {
-            if ([collection isKindOfClass:[PHAssetCollection class]])
-            {
-                // Filter empty Assets.
-                PHFetchResult *collectionResult = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
-                if (collectionResult.count > 0)
-                {
-                    MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
-                    group.collection = collection;
-                    [groups addObject:group];
-                }
-            }
-        }
-    }
-    self.groups = groups;
-}
-
-- (void)tappendTitleView
-{
-    UIView *titleView = self.navigationItem.titleView;
-    UIButton *titleBtn = [[titleView subviews] lastObject];
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        titleBtn.imageView.transform = (self.groupTableView.alpha == 1.0) ? CGAffineTransformMakeRotation(0) : CGAffineTransformMakeRotation(M_PI);
-        self.groupTableView.alpha = (self.groupTableView.alpha == 1.0) ? 0.0 : 1.0;
-    }];
-}
-
-- (void)tappendDoneBtn
-{
-    !self.completion?:self.completion(YES, [self.pickerManager.selectsUrls mutableCopy], [self.pickerManager.thumbImages mutableCopy], [self.pickerManager.originalImage mutableCopy], nil);
-    // Clear Select Data.
-    [MLPhotoPickerManager clear];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (UITableView *)groupTableView
 {
-    if (!_groupTableView) {
-        
-        if (gtiOS8) {
-            [self setupGroup];
+    return ({
+        if (!_groupTableView) {
+            if (gtiOS8) {
+                [self setupGroup];
+            }
+            UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
+            groupTableView.alpha = 0.0;
+            groupTableView.backgroundColor = [UIColor whiteColor];
+            groupTableView.dataSource = self;
+            groupTableView.delegate = self;
+            groupTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            [groupTableView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerMenuTableViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([MLImagePickerMenuTableViewCell class])];
+            [self.view addSubview:_groupTableView = groupTableView];
         }
-        
-        UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
-        groupTableView.alpha = 0.0;
-        groupTableView.backgroundColor = [UIColor whiteColor];
-        groupTableView.dataSource = self;
-        groupTableView.delegate = self;
-        groupTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [groupTableView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerMenuTableViewCell class]) bundle:nil] forCellReuseIdentifier:NSStringFromClass([MLImagePickerMenuTableViewCell class])];
-        [self.view addSubview:_groupTableView = groupTableView];
-    }
-    return _groupTableView;
+        _groupTableView;
+    });
 }
 
 - (MLPhotoPickerManager *)pickerManager
@@ -292,4 +262,26 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     
     [MLPhotoPickerManager manager].selectsUrls = selectAssetsURL.mutableCopy;
 }
+
+- (void)tappendTitleView
+{
+    ({
+        UIView *titleView = self.navigationItem.titleView;
+        UIButton *titleBtn = [[titleView subviews] lastObject];
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            titleBtn.imageView.transform = (self.groupTableView.alpha == 1.0) ? CGAffineTransformMakeRotation(0) : CGAffineTransformMakeRotation(M_PI);
+            self.groupTableView.alpha = (self.groupTableView.alpha == 1.0) ? 0.0 : 1.0;
+        }];
+    });
+}
+
+- (void)tappendDoneBtn
+{
+    !self.completion?:self.completion(YES, [self.pickerManager.selectsUrls mutableCopy], [self.pickerManager.thumbImages mutableCopy], [self.pickerManager.originalImage mutableCopy], nil);
+    // Clear Select Data.
+    [MLPhotoPickerManager clear];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

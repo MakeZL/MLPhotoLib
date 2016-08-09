@@ -7,13 +7,7 @@
 //
 
 #import "MLPhotoAsset.h"
-
-#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
-#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
-#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
-
-static CGFloat MLImagePickerCellMargin = 2;
-static CGFloat MLImagePickerCellRowCount = 3;
+#import "MLPhotoPickerManager.h"
 
 @interface MLPhotoAsset ()
 @property (nonatomic, assign) BOOL isUIImage;

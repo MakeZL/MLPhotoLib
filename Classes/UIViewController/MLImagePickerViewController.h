@@ -11,15 +11,24 @@
 
 @class MLPhotoPickerGroup;
 @interface MLImagePickerViewController : UIViewController
+/// Init
 + (instancetype)pickerViewController;
+/// Limit Count
+@property (nonatomic, assign) NSUInteger maxCount;
 
-@property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;
+/// Show && CallBlock.
+- (void)displayForVC:(__weak UIViewController *)viewController
+    completionHandle:(void(^)(BOOL success, NSArray<NSURL *>*assetUrls,
+                                        NSArray<UIImage *>*thumbImages,
+                                     NSArray<UIImage *>*originalImages,
+                                                       NSError *error))completionHandle;
+/// Recoder Last Select Picker PHAsset/ALAsset URL.
 @property (nonatomic, strong) NSArray<NSURL *>*selectAssetsURL;
 
+
+/// Categories Use.
+@property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;
 - (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group;
 - (void)tappendTitleView;
-/// Limit Max Picker Count
-@property (nonatomic, assign) NSUInteger maxCount;
-/// Show In viewController
-- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void(^)(BOOL success, NSArray<NSURL *>*assetUrls, NSArray<UIImage *>*thumbImages, NSArray<UIImage *>*originalImages, NSError *error))completionHandle;
+
 @end

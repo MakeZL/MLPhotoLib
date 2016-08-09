@@ -11,6 +11,15 @@
 #define gtiOS8 ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
 #define WeakSelf __weak typeof(self)weakSelf = self;
 
+#define MLImagePickerUIScreenScale ([[UIScreen mainScreen] scale])
+#define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
+#define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLShowRowCellCount + 1)) / MLShowRowCellCount)
+
+static NSUInteger MLDefaultMaxCount = 9;
+static NSInteger MLShowRowCellCount = 3;
+static CGFloat MLImagePickerCellMargin = 2;
+
+
 @interface MLPhotoPickerManager : NSObject
 + (instancetype)manager;
 + (void)clear;
