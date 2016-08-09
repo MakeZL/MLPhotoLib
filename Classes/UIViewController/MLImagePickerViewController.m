@@ -52,7 +52,9 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         }
     }
     self.completion = completionHandle;
-    [viewController presentViewController:[[MLNavigationViewController alloc] initWithRootViewController:self] animated:YES completion:nil];
+    [MLPhotoPickerManager manager].presentViewController = viewController;
+    [MLPhotoPickerManager manager].navigationController = [[MLNavigationViewController alloc] initWithRootViewController:self];
+    [viewController presentViewController:[MLPhotoPickerManager manager].navigationController animated:YES completion:nil];
 }
 
 + (instancetype)new
@@ -68,6 +70,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.isSupportTakeCamera = YES;
         self.maxCount = MLDefaultMaxCount;
     }
     return self;
@@ -99,10 +102,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     if (gtiOS8) {
         self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
         self.fetchResult = [self.imageManager fetchResult];
-
-        PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
-        requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-        requestOptions.networkAccessAllowed = YES;
+        
+        [self setupGroup];
         
         NSMutableArray *assets = @[].mutableCopy;
         for (NSInteger i = 0; i < self.fetchResult.count; i++){
@@ -110,8 +111,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             asset.asset = self.fetchResult[i];
             [assets addObject:asset];
         }
-        
         self.contentCollectionView.albumAssets = assets;
+        self.contentCollectionView.group = [self.groups firstObject];
     } else {
         WeakSelf
         MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
@@ -176,6 +177,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             asset.asset = self.fetchResult[i];
             [assets addObject:asset];
         }
+        self.contentCollectionView.group = group;
         self.contentCollectionView.albumAssets = assets;
     } else {
         WeakSelf
@@ -187,6 +189,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
                 mlAsset.asset = asset;
                 [tmpArrayM addObject:mlAsset];
             }
+            weakSelf.contentCollectionView.group = group;
             weakSelf.contentCollectionView.albumAssets = tmpArrayM;
         }];
     }
@@ -232,9 +235,6 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 {
     return ({
         if (!_groupTableView) {
-            if (gtiOS8) {
-                [self setupGroup];
-            }
             UITableView *groupTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 250) style:UITableViewStylePlain];
             groupTableView.alpha = 0.0;
             groupTableView.backgroundColor = [UIColor whiteColor];
@@ -268,6 +268,13 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     _maxCount = maxCount;
     
     [MLPhotoPickerManager manager].maxCount = maxCount;
+}
+
+- (void)setIsSupportTakeCamera:(BOOL)isSupportTakeCamera
+{
+    _isSupportTakeCamera = isSupportTakeCamera;
+    
+    [MLPhotoPickerManager manager].isSupportTakeCamera = isSupportTakeCamera;
 }
 
 - (void)tappendTitleView

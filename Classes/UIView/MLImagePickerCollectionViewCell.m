@@ -78,7 +78,7 @@
         // Insert
         if (manager.selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
             // Beyond Max Count.
-            [MLImagePickerHUD showMessage:@"已经超出图片的最大数咯~"];
+            [MLImagePickerHUD showMessage:MLMaxCountMessage];
             return ;
         }
         [manager.selectsUrls addObject:assetURL];

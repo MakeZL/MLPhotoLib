@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class MLPhotoAsset;
+@class MLPhotoAsset, MLPhotoPickerGroup;
 @interface MLPhotoPickerCollectionView : UIView
+@property (strong,nonatomic) MLPhotoPickerGroup *group;
 @property (strong,nonatomic) NSArray<MLPhotoAsset *> *albumAssets;
 @end

@@ -13,9 +13,10 @@
 @interface MLImagePickerViewController : UIViewController
 /// Init
 + (instancetype)pickerViewController;
-/// Limit Count
+/// Limit Count. Default 9
 @property (nonatomic, assign) NSUInteger maxCount;
-
+/// Support Camera. Default YES
+@property (nonatomic, assign) BOOL isSupportTakeCamera;
 /// Show && CallBlock.
 - (void)displayForVC:(__weak UIViewController *)viewController
     completionHandle:(void(^)(BOOL success, NSArray<NSURL *>*assetUrls,

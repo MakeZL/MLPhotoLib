@@ -18,14 +18,18 @@
 static NSUInteger MLDefaultMaxCount = 9;
 static NSInteger MLShowRowCellCount = 3;
 static CGFloat MLImagePickerCellMargin = 2;
-
+static NSString *MLMaxCountMessage = @"已经超出图片的最大数咯~";
 
 @interface MLPhotoPickerManager : NSObject
 + (instancetype)manager;
 + (void)clear;
 
 @property (nonatomic, assign) NSInteger maxCount;
+/// Support Camera.
+@property (nonatomic, assign) BOOL isSupportTakeCamera;
 @property (nonatomic, strong) NSMutableArray *selectsUrls;
+@property (nonatomic, weak) UIViewController *presentViewController;
+@property (nonatomic, strong) UINavigationController *navigationController;
 
 /// Select ThumbImage as @[@{@selectsUrl:@UIImage}, ..]
 @property (nonatomic, strong) NSMutableArray *selectsThumbImages;

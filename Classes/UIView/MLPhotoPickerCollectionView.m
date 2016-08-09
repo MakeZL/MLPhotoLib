@@ -9,8 +9,10 @@
 #import "MLPhotoPickerCollectionView.h"
 #import "MLImagePickerCollectionViewCell.h"
 #import "MLPhotoPickerManager.h"
+#import "MLPhotoKitData.h"
+#import "MLPhotoPickerData.h"
 
-@interface MLPhotoPickerCollectionView ()<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface MLPhotoPickerCollectionView () <UICollectionViewDelegate, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, weak) UICollectionView *collectionView;
 @end
 
@@ -40,6 +42,7 @@
         [self addSubview:_collectionView = collectionView];
         
         [collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerCollectionViewCell class]) bundle:nil] forCellWithReuseIdentifier:NSStringFromClass([MLImagePickerCollectionViewCell class])];
+        [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MLCamreaCell"];
     }
     return _collectionView;
 }
@@ -51,15 +54,66 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.albumAssets.count;
+    BOOL supportTakeCamera = [MLPhotoPickerManager manager].isSupportTakeCamera;
+    return supportTakeCamera?self.albumAssets.count + 1 : self.albumAssets.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0) {
+        // Camera
+        return [self configureCameraCellIndexPath:indexPath];
+    }
+    
     MLImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MLImagePickerCollectionViewCell class]) forIndexPath:indexPath];
     if (self.albumAssets.count > indexPath.item) {
         cell.asset = [self.albumAssets objectAtIndex:indexPath.item];   
     }
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0 &&
+        [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
+        ) {
+        UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
+        UIImagePickerControllerSourceType sourcheType = UIImagePickerControllerSourceTypeCamera;
+        imagePickerVC.sourceType = sourcheType;
+        imagePickerVC.delegate = self;
+        imagePickerVC.allowsEditing = YES;
+        [[MLPhotoPickerManager manager].navigationController presentViewController:imagePickerVC animated:YES completion:nil];
+    }
+}
+
+- (UICollectionViewCell *)configureCameraCellIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"MLCamreaCell" forIndexPath:indexPath];
+    
+    if ([cell.contentView viewWithTag:1000001] == nil) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+        imageView.tag = 1000001;
+        imageView.image = [UIImage imageNamed:@"MLImagePickerController.bundle/zl_camera"];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell.contentView addSubview:imageView];
+    }
+    return cell;
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    UIImage *editedImage = info[@"UIImagePickerControllerEditedImage"];
+    if (gtiOS8) {
+        [MLPhotoKitData addAssetAlbumForName:[self.group groupName] image:editedImage completionHandler:^(BOOL success, NSError * _Nullable error) {
+            
+        }];
+    } else {
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library writeImageToSavedPhotosAlbum:[editedImage CGImage] orientation:(ALAssetOrientation)editedImage.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
+            
+        }];
+    }
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 @end

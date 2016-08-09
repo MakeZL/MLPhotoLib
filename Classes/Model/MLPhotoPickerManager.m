@@ -63,6 +63,8 @@
 
 + (void)clear
 {
+    [[self manager] setNavigationController:nil];
+    [[self manager] setIsSupportTakeCamera:YES];
     [[self manager] setMaxCount:MLDefaultMaxCount];
     [[[self manager] selectsUrls] removeAllObjects];
     [[[self manager] selectsOriginalImage] removeAllObjects];
