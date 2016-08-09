@@ -303,6 +303,7 @@
 				TargetAttributes = {
 					4274E4431D4F21C0001D39C3 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = B3C9PH5883;
 					};
 					4274E45C1D4F21C0001D39C3 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -525,7 +526,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MLPhotoLib/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = leisuro.MLPhotoLib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -537,7 +540,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MLPhotoLib/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = leisuro.MLPhotoLib;
 				PRODUCT_NAME = "$(TARGET_NAME)";

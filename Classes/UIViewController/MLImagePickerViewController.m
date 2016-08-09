@@ -123,27 +123,9 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
             asset.asset = self.fetchResult[i];
             [assets addObject:asset];
-            
-//            NSURL *assetURL = [asset assetURL];
-//            
-//            if self.selectIndentifiers.contains(asset.localIdentifier) == true {
-//                self.imageManager.requestImageForAsset(asset, targetSize: AssetGridThumbnailSize, contentMode: .AspectFill, options: nil) { (let image, let info:[NSObject : AnyObject]?) -> Void in
-//                    if info![PHImageFileURLKey] != nil {
-//                        self.phImageFileUrls.append(info![PHImageFileURLKey] as! NSURL)
-//                    }
-//                    self.selectImages.append(image!)
-//                }
-//            }
-            
         }
         
         self.contentCollectionView.albumAssets = assets;
-//        self.collectionView?.reloadData()
-//        self.collectionView?.layoutIfNeeded()
-//        if self.cancleLongGestureScrollSelectedPicker == false {
-//            self.collectionView?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressGestureScrollPhoto:"))
-//        }
-        
     } else {
         WeakSelf
         MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];

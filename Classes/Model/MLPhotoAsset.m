@@ -13,7 +13,7 @@
 #define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLImagePickerCellRowCount + 1)) / MLImagePickerCellRowCount)
 
 static CGFloat MLImagePickerCellMargin = 2;
-static CGFloat MLImagePickerCellRowCount = 4;
+static CGFloat MLImagePickerCellRowCount = 3;
 
 @interface MLPhotoAsset ()
 @property (nonatomic, assign) BOOL isUIImage;
@@ -47,8 +47,12 @@ static CGFloat MLImagePickerCellRowCount = 4;
 {
     if (self.isPHAsset) {
         // PhotoKit
-        CGSize targetSize = CGSizeMake(MLImagePickerCellWidth * MLImagePickerUIScreenScale, MLImagePickerCellWidth * MLImagePickerUIScreenScale);
-        [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        CGSize targetSize = CGSizeMake(MLImagePickerCellWidth*1.5, MLImagePickerCellWidth*1.5);
+        PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
+        requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        requestOptions.networkAccessAllowed = YES;
+        
+        [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:requestOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             if ([[info valueForKey:@"PHImageResultIsDegradedKey"] integerValue] == 0) {
                 !completion?:completion(result);
             }
@@ -112,7 +116,7 @@ static CGFloat MLImagePickerCellRowCount = 4;
 #pragma clang diagnostic ignored"-Wdeprecated"
     if (self.isPHAsset) {
         PHAssetResource *resource = [PHAssetResource assetResourcesForAsset:self.asset].firstObject;
-        return [resource valueForKey:@"_fileURL"];
+        return [resource valueForKey:@"_privateFileURL"];
     }
     return [[self.asset defaultRepresentation] url];
 #pragma clang diagnostic pop

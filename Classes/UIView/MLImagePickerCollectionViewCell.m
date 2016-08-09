@@ -31,12 +31,11 @@
     }];
     
     MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
-    BOOL isSelected = [manager.selectsUrls containsObject:[asset assetURL]];
+    NSURL *assetURL = [self.asset assetURL];
+    BOOL isSelected = [manager.selectsUrls containsObject:assetURL];
     self.tagButton.selected = isSelected;
     
     if (isSelected) {
-        NSURL *assetURL = [self.asset assetURL];
-        
         NSInteger index = 0;
         NSURL *curURL = nil;
         for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {

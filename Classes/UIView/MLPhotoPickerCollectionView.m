@@ -10,7 +10,8 @@
 #import "MLImagePickerCollectionViewCell.h"
 #import "MLPhotoPickerManager.h"
 
-static NSInteger kShowRowCellCount = 4;
+static NSInteger kShowRowCellCount = 3;
+static CGFloat MLImagePickerCellMargin = 2;
 
 @interface MLPhotoPickerCollectionView ()<UICollectionViewDelegate, UICollectionViewDataSource>
 @property (nonatomic, weak) UICollectionView *collectionView;
@@ -27,11 +28,11 @@ static NSInteger kShowRowCellCount = 4;
 - (UICollectionView *)collectionView
 {
     if (!_collectionView) {
-        CGFloat cellWH = self.frame.size.width / kShowRowCellCount;
+        CGFloat cellWH = (self.frame.size.width-MLImagePickerCellMargin*kShowRowCellCount) / kShowRowCellCount;
         
         UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
         collectionViewFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        collectionViewFlowLayout.minimumLineSpacing = 0;
+        collectionViewFlowLayout.minimumLineSpacing = MLImagePickerCellMargin;
         collectionViewFlowLayout.minimumInteritemSpacing = 0;
         collectionViewFlowLayout.itemSize = CGSizeMake(cellWH, cellWH);
         
