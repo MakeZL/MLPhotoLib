@@ -29,7 +29,7 @@ static NSString *PHImageFileURLKey = @"PHImageFileURLKey";
 //static CGFloat MLImagePickerCellRowCount = 4;
 //static NSInteger MLImagePickerMaxCount = 9;
 
-typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
+typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArray<UIImage *>*thumbImages, NSArray<UIImage *>*originalImages, NSError *error);
 
 @interface MLImagePickerViewController ()
 @property (nonatomic, weak) UITableView *groupTableView;
@@ -43,21 +43,21 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 @implementation MLImagePickerViewController
 
-- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void (^)(BOOL, NSArray *, NSError *))completionHandle
+- (void)displayForVC:(__weak UIViewController *)viewController completionHandle:(void (^)(BOOL, NSArray<NSURL *> *, NSArray<UIImage *> *, NSArray<UIImage *> *, NSError *))completionHandle
 {
     if (gtiOS8)
     {
         if (![MLPhotoKitData judgeIsHavePhotoAblumAuthority])
         {
             NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
-            !completionHandle?:completionHandle(NO, nil, error);
+            !completionHandle?:completionHandle(NO, nil, nil, nil, error);
             return;
         }
     } else {
         if (![MLPhotoPickerData judgeIsHavePhotoAblumAuthority])
         {
             NSError *error = [NSError errorWithDomain:@"com.github.makezl" code:-11 userInfo:@{@"errorMsg":@"用户没有开启选择相片的权限!"}];
-            !completionHandle?:completionHandle(NO, nil, error);
+            !completionHandle?:completionHandle(NO, nil, nil, nil, error);
             return;
         }
     }
@@ -113,9 +113,6 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
         self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
         self.fetchResult = [self.imageManager fetchResult];
 
-        // PhotoKit
-//        CGSize size = CGSizeMake(MLImagePickerCellWidth * MLImagePickerUIScreenScale, MLImagePickerCellWidth * MLImagePickerUIScreenScale);
-        
         PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         requestOptions.networkAccessAllowed = YES;
@@ -186,6 +183,7 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
         WeakSelf
         [[MLPhotoPickerData pickerData] getGroupPhotosWithGroup:group finished:^(NSArray *assets) {
             NSMutableArray *tmpArrayM = [NSMutableArray arrayWithCapacity:assets.count];
+            assets = [[assets reverseObjectEnumerator] allObjects];
             for (ALAsset *asset in assets) {
                 __block MLPhotoAsset *mlAsset = [[MLPhotoAsset alloc] init];
                 mlAsset.asset = asset;
@@ -215,7 +213,7 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 - (void)setupRightView
 {
-    return ({
+    ({
         UIView *rightView = [[UIView alloc] init];
         rightView.frame = CGRectMake(self.view.frame.size.width - 60, 0, 40, 44);
         UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -272,7 +270,7 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 - (void)tappendDoneBtn
 {
-    !self.completion?:self.completion(YES, [self.pickerManager.selectsUrls mutableCopy], nil);
+    !self.completion?:self.completion(YES, [self.pickerManager.selectsUrls mutableCopy], [self.pickerManager.thumbImages mutableCopy], [self.pickerManager.originalImage mutableCopy], nil);
     // Clear Select Data.
     [MLPhotoPickerManager clear];
     [self dismissViewControllerAnimated:YES completion:nil];

@@ -25,11 +25,17 @@
 - (IBAction)actionOpenAlbum
 {
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
+    // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
+    
     WeakSelf
-    [pickerVC displayForVC:self completionHandle:^(BOOL success, NSArray *assets, NSError *error) {
-        weakSelf.selectUrls = assets;
-        NSLog(@" assets -- :%@", assets);
+    [pickerVC displayForVC:self completionHandle:^(BOOL success, NSArray<NSURL *> *assetUrls, NSArray<UIImage *> *thumbImages, NSArray<UIImage *> *originalImages, NSError *error) {
+        
+        weakSelf.selectUrls = assetUrls;
+        
+        NSLog(@" assetUrls -- :%@", assetUrls);
+        NSLog(@" thumbImages -- :%@", thumbImages);
+        NSLog(@" originalImages -- :%@", originalImages);
     }];
 }
 

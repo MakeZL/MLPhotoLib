@@ -16,4 +16,14 @@
 + (void)clear;
 
 @property (nonatomic, strong) NSMutableArray *selectsUrls;
+
+/// Select ThumbImage as @[@{@selectsUrl:@UIImage}, ..]
+@property (nonatomic, strong) NSMutableArray *selectsThumbImages;
+/// Select OriginalImage as @[@{@selectsUrl:@UIImage}, ..]
+@property (nonatomic, strong) NSMutableArray *selectsOriginalImage;
+
+// Ignore _selectsOriginalImage @{@"URL":UIImage} -> @[UIImage, UIImage]
+@property (nonatomic, strong) NSMutableArray *originalImage;
+@property (nonatomic, strong) NSMutableArray *thumbImages;
+
 @end

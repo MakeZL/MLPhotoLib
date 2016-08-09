@@ -49,7 +49,9 @@ static CGFloat MLImagePickerCellRowCount = 4;
         // PhotoKit
         CGSize targetSize = CGSizeMake(MLImagePickerCellWidth * MLImagePickerUIScreenScale, MLImagePickerCellWidth * MLImagePickerUIScreenScale);
         [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            !completion?:completion(result);
+            if ([[info valueForKey:@"PHImageResultIsDegradedKey"] integerValue] == 0) {
+                !completion?:completion(result);
+            }
         }];
     } else {
         !completion?:completion([self thumbImage]);
@@ -60,9 +62,11 @@ static CGFloat MLImagePickerCellRowCount = 4;
 {
     if (self.isPHAsset) {
         // PhotoKit
-        CGSize targetSize = CGSizeMake(MLImagePickerCellWidth * MLImagePickerUIScreenScale, MLImagePickerCellWidth * MLImagePickerUIScreenScale);
+        CGSize targetSize = [UIScreen mainScreen].bounds.size;
         [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            !completion?:completion(result);
+            if ([[info valueForKey:@"PHImageResultIsDegradedKey"] integerValue] == 0) {
+                !completion?:completion(result);
+            }
         }];
     } else {
         return !completion?:completion([self originImage]);

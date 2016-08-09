@@ -25,8 +25,9 @@
     _asset = asset;
     
     self.hidden = NO;
+    WeakSelf
     [asset getThumbImageWithCompletion:^(UIImage *image) {
-        self.imageView.image = image;
+        weakSelf.imageView.image = image;
     }];
     
     MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
@@ -37,6 +38,7 @@
 - (IBAction)tagBtnClick
 {
     MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+    
     NSURL *assetURL = [self.asset assetURL];
     if (assetURL == nil) {
         return;
@@ -48,6 +50,33 @@
         // Insert
         [manager.selectsUrls addObject:assetURL];
     }
+    
+    NSInteger index = 0;
+    NSURL *curURL = nil;
+    for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
+        NSURL *url = [[dict allKeys] firstObject];
+        if ([url isEqual:assetURL]) {
+            curURL = url;
+            break;
+        }
+        index++;
+    }
+    
+    [self.asset getThumbImageWithCompletion:^(UIImage *image) {
+        if ([assetURL isEqual:curURL]) {
+            [manager.selectsThumbImages removeObjectAtIndex:index];
+        } else {
+            [manager.selectsThumbImages addObject:@{assetURL:image}];
+        }
+    }];
+    
+    [self.asset getOriginImageWithCompletion:^(UIImage *image) {
+        if ([assetURL isEqual:curURL]) {
+            [manager.selectsOriginalImage removeObjectAtIndex:index];
+        } else {
+            [manager.selectsOriginalImage addObject:@{assetURL:image}];
+        }
+    }];
     
     BOOL isSelected = [manager.selectsUrls containsObject:[self.asset assetURL]];
     self.tagButton.selected = isSelected;
