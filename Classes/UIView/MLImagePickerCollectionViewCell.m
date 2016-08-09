@@ -8,6 +8,7 @@
 
 #import "MLImagePickerCollectionViewCell.h"
 #import "MLPhotoPickerManager.h"
+#import "MLImagePickerHUD.h"
 #import "MLPhotoAsset.h"
 
 @implementation MLImagePickerCollectionViewCell
@@ -75,6 +76,11 @@
         [manager.selectsUrls removeObject:assetURL];
     } else {
         // Insert
+        if (manager.selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
+            // Beyond Max Count.
+            [MLImagePickerHUD showMessage:@"已经超出图片的最大数咯~"];
+            return ;
+        }
         [manager.selectsUrls addObject:assetURL];
     }
     

@@ -63,6 +63,7 @@
 
 + (void)clear
 {
+    [[self manager] setMaxCount:MLDefaultMaxCount];
     [[[self manager] selectsUrls] removeAllObjects];
     [[[self manager] selectsOriginalImage] removeAllObjects];
     [[[self manager] selectsThumbImages] removeAllObjects];

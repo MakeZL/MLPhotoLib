@@ -29,6 +29,7 @@
 - (IBAction)actionOpenAlbum
 {
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
+    pickerVC.maxCount = 3;
     // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
     

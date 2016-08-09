@@ -263,6 +263,13 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     [MLPhotoPickerManager manager].selectsUrls = selectAssetsURL.mutableCopy;
 }
 
+- (void)setMaxCount:(NSUInteger)maxCount
+{
+    _maxCount = maxCount;
+    
+    [MLPhotoPickerManager manager].maxCount = maxCount;
+}
+
 - (void)tappendTitleView
 {
     ({

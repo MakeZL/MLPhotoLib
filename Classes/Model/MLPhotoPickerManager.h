@@ -24,6 +24,7 @@ static CGFloat MLImagePickerCellMargin = 2;
 + (instancetype)manager;
 + (void)clear;
 
+@property (nonatomic, assign) NSInteger maxCount;
 @property (nonatomic, strong) NSMutableArray *selectsUrls;
 
 /// Select ThumbImage as @[@{@selectsUrl:@UIImage}, ..]
@@ -32,7 +33,7 @@ static CGFloat MLImagePickerCellMargin = 2;
 @property (nonatomic, strong) NSMutableArray *selectsOriginalImage;
 
 // Ignore _selectsOriginalImage @{@"URL":UIImage} -> @[UIImage, UIImage]
-@property (nonatomic, strong) NSMutableArray *originalImage;
-@property (nonatomic, strong) NSMutableArray *thumbImages;
+@property (nonatomic, strong, readonly) NSMutableArray *originalImage;
+@property (nonatomic, strong, readonly) NSMutableArray *thumbImages;
 
 @end
