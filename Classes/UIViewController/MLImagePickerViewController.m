@@ -215,17 +215,18 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 - (void)setupRightView
 {
-    UIView *rightView = [[UIView alloc] init];
-    rightView.frame = CGRectMake(0, 0, 40, 44);
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [rightBtn setFrame:rightView.frame];
-    [rightBtn setTitle:@"完成" forState:UIControlStateNormal];
-    [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
-    [rightView addSubview:rightBtn];
-    [self.navigationController.navigationBar addSubview:rightView];
-//    return rightView;
+    return ({
+        UIView *rightView = [[UIView alloc] init];
+        rightView.frame = CGRectMake(self.view.frame.size.width - 60, 0, 40, 44);
+        UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [rightBtn setFrame:rightView.bounds];
+        [rightBtn setTitle:@"完成" forState:UIControlStateNormal];
+        [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
+        [rightView addSubview:rightBtn];
+        [self.navigationController.navigationBar addSubview:rightView];
+    });
 }
 
 - (void)setupGroup
@@ -271,7 +272,7 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
 
 - (void)tappendDoneBtn
 {
-    !self.completion?:self.completion(YES, self.pickerManager.selectsUrls, nil);
+    !self.completion?:self.completion(YES, [self.pickerManager.selectsUrls mutableCopy], nil);
     // Clear Select Data.
     [MLPhotoPickerManager clear];
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -305,4 +306,9 @@ typedef void(^completionHandle)(BOOL success, NSArray *assets, NSError *error);
     return _pickerManager;
 }
 
+- (void)setSelectAssetsURL:(NSArray<NSURL *> *)selectAssetsURL
+{
+    _selectAssetsURL = selectAssetsURL;
+    [MLPhotoPickerManager manager].selectsUrls = selectAssetsURL.mutableCopy;
+}
 @end

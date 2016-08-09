@@ -14,6 +14,7 @@
 + (instancetype)pickerViewController;
 
 @property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;
+@property (nonatomic, strong) NSArray<NSURL *>*selectAssetsURL;
 
 - (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group;
 - (void)tappendTitleView;
