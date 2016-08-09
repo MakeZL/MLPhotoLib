@@ -33,6 +33,34 @@
     MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
     BOOL isSelected = [manager.selectsUrls containsObject:[asset assetURL]];
     self.tagButton.selected = isSelected;
+    
+    if (isSelected) {
+        NSURL *assetURL = [self.asset assetURL];
+        
+        NSInteger index = 0;
+        NSURL *curURL = nil;
+        for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
+            NSURL *url = [[dict allKeys] firstObject];
+            if ([url isEqual:assetURL]) {
+                curURL = url;
+                break;
+            }
+            index++;
+        }
+    
+        [self.asset getThumbImageWithCompletion:^(UIImage *image) {
+            if (![assetURL isEqual:curURL]) {
+                [manager.selectsThumbImages addObject:@{assetURL:image}];
+            }
+        }];
+        
+        [self.asset getOriginImageWithCompletion:^(UIImage *image) {
+            if (![assetURL isEqual:curURL]) {
+                [manager.selectsOriginalImage addObject:@{assetURL:image}];
+            }
+        }];
+    }
+    
 }
 
 - (IBAction)tagBtnClick

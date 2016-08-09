@@ -112,7 +112,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         
         self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
         self.fetchResult = [self.imageManager fetchResult];
-
+        MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+        
         PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
         requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         requestOptions.networkAccessAllowed = YES;
@@ -123,10 +124,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             asset.asset = self.fetchResult[i];
             [assets addObject:asset];
             
-            
-//            PHAsset *asset = self.fetchResult[i];
-//            self.photoIdentifiers.append(asset.localIdentifier)
-            
+//            NSURL *assetURL = [asset assetURL];
+//            
 //            if self.selectIndentifiers.contains(asset.localIdentifier) == true {
 //                self.imageManager.requestImageForAsset(asset, targetSize: AssetGridThumbnailSize, contentMode: .AspectFill, options: nil) { (let image, let info:[NSObject : AnyObject]?) -> Void in
 //                    if info![PHImageFileURLKey] != nil {
@@ -135,6 +134,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 //                    self.selectImages.append(image!)
 //                }
 //            }
+            
         }
         
         self.contentCollectionView.albumAssets = assets;
@@ -307,6 +307,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)setSelectAssetsURL:(NSArray<NSURL *> *)selectAssetsURL
 {
     _selectAssetsURL = selectAssetsURL;
+    
     [MLPhotoPickerManager manager].selectsUrls = selectAssetsURL.mutableCopy;
 }
 @end
