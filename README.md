@@ -3,9 +3,7 @@ A New PhotoLib, Compatible with iOS7,8,9, Simple, lightweight
 
 
 # Use
-
-UIViewController.m
-------------
+    // UIViewController.m
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
     pickerVC.maxCount = 3;
     // Recoder
