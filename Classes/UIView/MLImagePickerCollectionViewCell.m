@@ -113,5 +113,8 @@
     
     BOOL isSelected = [manager.selectsUrls containsObject:[self.asset assetURL]];
     self.tagButton.selected = isSelected;
+    
+    // refresh selectUrl count;
+    [[NSNotificationCenter defaultCenter] postNotificationName:MLNotificationDidChangeSelectUrl object:nil];
 }
 @end

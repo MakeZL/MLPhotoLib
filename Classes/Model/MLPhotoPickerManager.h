@@ -15,6 +15,7 @@
 #define UIScreenWidth ([UIScreen mainScreen].bounds.size.width)
 #define MLImagePickerCellWidth ((UIScreenWidth - MLImagePickerCellMargin * (MLShowRowCellCount + 1)) / MLShowRowCellCount)
 
+static NSString *MLNotificationDidChangeSelectUrl = @"MLNotificationDidChangeSelectUrl";
 static NSUInteger MLDefaultMaxCount = 9;
 static NSInteger MLShowRowCellCount = 3;
 static CGFloat MLImagePickerCellMargin = 2;

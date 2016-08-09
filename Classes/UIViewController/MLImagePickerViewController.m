@@ -24,10 +24,11 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 @interface MLImagePickerViewController ()
 @property (nonatomic, weak) UITableView *groupTableView;
 @property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
+@property (nonatomic, weak) UIButton *tagRightBtn;
+
 @property (nonatomic, strong) MLPhotoPickerAssetsManager *imageManager;
 @property (nonatomic, strong) MLPhotoPickerManager *pickerManager;
 @property (nonatomic, strong) PHFetchResult *fetchResult;
-
 @property (nonatomic, copy) completionHandle completion;
 @end
 
@@ -87,6 +88,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setupSubviews];
     [self setupPickerData];
+    [self addSelectAssetNotification];
 }
 
 - (void)setupSubviews
@@ -153,6 +155,11 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     self.groups = groups;
 }
 
+- (void)addSelectAssetNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationDidChangeSelectUrl) name:MLNotificationDidChangeSelectUrl object:nil];
+}
+
 - (void)groupsWithAsset:(NSArray *)groups
 {
     for (MLPhotoPickerGroup *group in groups) {
@@ -166,6 +173,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 
 - (void)reloadCollectionViewWithGroup:(MLPhotoPickerGroup *)group
 {
+    UIButton *titleBtn = [[self.navigationItem.titleView subviews] lastObject];
+    [titleBtn setTitle:[group groupName] forState:UIControlStateNormal];
     if (gtiOS8) {
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
         [options setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]]];
@@ -199,6 +208,9 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (UIView *)addTitleView
 {
     return ({
+        if (self.navigationItem.titleView != nil) {
+            return self.navigationItem.titleView;
+        }
         UIView *titleView = [[UIView alloc] init];
         titleView.frame = CGRectMake(0, 0, 200, 44);
         UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -208,7 +220,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         [titleButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_xialajiantou"] forState:UIControlStateNormal];
         [titleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
         [titleButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        [titleButton setTitle:@"相机胶卷" forState:UIControlStateNormal];
+        [titleButton setTitle:@"Camera Roll" forState:UIControlStateNormal];
         [titleButton addTarget:self action:@selector(tappendTitleView) forControlEvents:UIControlEventTouchUpInside];
         [titleView addSubview:titleButton];
         titleView;
@@ -228,6 +240,17 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
         [rightView addSubview:rightBtn];
         [self.navigationController.navigationBar addSubview:rightView];
+        
+        UIButton *tagRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        tagRightBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        tagRightBtn.titleLabel.textColor = [UIColor whiteColor];
+        tagRightBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        tagRightBtn.layer.cornerRadius = 10;
+        tagRightBtn.frame = CGRectMake(30, 0, 20, 20);
+        tagRightBtn.backgroundColor = [UIColor redColor];
+        [rightView addSubview:_tagRightBtn = tagRightBtn];
+        
+        [self notificationDidChangeSelectUrl];
     });
 }
 
@@ -298,4 +321,15 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)notificationDidChangeSelectUrl
+{
+    NSInteger selectsUrlsCount = [MLPhotoPickerManager manager].selectsUrls.count;
+    self.tagRightBtn.hidden = (selectsUrlsCount < 1);
+    [self.tagRightBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end
