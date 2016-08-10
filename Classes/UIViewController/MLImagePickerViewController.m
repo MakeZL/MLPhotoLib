@@ -362,6 +362,12 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
             asset.asset = [self.fetchResult firstObject];
             [assets insertObject:asset atIndex:0];
+            
+            NSURL *assetURL = [asset assetURL];
+            if (assetURL != nil) {
+                // Recoder Take Camera
+                [[MLPhotoPickerManager manager].selectsUrls addObject:assetURL];
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.contentCollectionView.albumAssets = assets;
             });
