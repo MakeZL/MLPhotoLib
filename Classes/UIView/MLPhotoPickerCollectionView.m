@@ -128,16 +128,10 @@
     for (NSInteger i = 0; i < cells.count; i++) {
         MLImagePickerCollectionViewCell *cell = cells[i];
         
-        if (((CGRectGetMaxY(cell.frame) > point.y && CGRectGetMaxY(cell.frame) - point.y <= cell.frame.size.height) == true &&
+        if (((CGRectGetMaxY(cell.frame) > point.y && CGRectGetMaxY(cell.frame) - point.y <= cell.frame.size.height) == YES &&
             (CGRectGetMaxX(cell.frame) > point.x && CGRectGetMaxX(cell.frame) - point.x <= cell.frame.size.width)
             ) == YES) {
-//            NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-            
-            if ([MLPhotoPickerManager manager].selectsUrls.count > [MLPhotoPickerManager manager].maxCount){
-                return;
-            }
             [cell activeDidSelecteAsset];
-//            self.imagePickerSelectAssetsCellWithSelected(indexPath!, selected: true)
         }
     }
 }
