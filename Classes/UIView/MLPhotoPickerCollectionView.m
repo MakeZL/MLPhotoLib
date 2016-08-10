@@ -43,6 +43,7 @@
         
         [collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([MLImagePickerCollectionViewCell class]) bundle:nil] forCellWithReuseIdentifier:NSStringFromClass([MLImagePickerCollectionViewCell class])];
         [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"MLCamreaCell"];
+        [collectionView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureScrollPhoto:)]];
     }
     return _collectionView;
 }
@@ -117,5 +118,27 @@
     }
     
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)longPressGestureScrollPhoto:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+    CGPoint point = [gestureRecognizer locationInView:self.collectionView];
+    NSArray *cells = [self.collectionView visibleCells];
+    
+    for (NSInteger i = 0; i < cells.count; i++) {
+        MLImagePickerCollectionViewCell *cell = cells[i];
+        
+        if (((CGRectGetMaxY(cell.frame) > point.y && CGRectGetMaxY(cell.frame) - point.y <= cell.frame.size.height) == true &&
+            (CGRectGetMaxX(cell.frame) > point.x && CGRectGetMaxX(cell.frame) - point.x <= cell.frame.size.width)
+            ) == YES) {
+//            NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+            
+            if ([MLPhotoPickerManager manager].selectsUrls.count > [MLPhotoPickerManager manager].maxCount){
+                return;
+            }
+            [cell activeDidSelecteAsset];
+//            self.imagePickerSelectAssetsCellWithSelected(indexPath!, selected: true)
+        }
+    }
 }
 @end

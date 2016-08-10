@@ -20,12 +20,11 @@
 /// Show && CallBlock.
 - (void)displayForVC:(__weak UIViewController *)viewController
     completionHandle:(void(^)(BOOL success, NSArray<NSURL *>*assetUrls,
-                                        NSArray<UIImage *>*thumbImages,
-                                     NSArray<UIImage *>*originalImages,
-                                                       NSError *error))completionHandle;
+                                            NSArray<UIImage *>*thumbImages,
+                                            NSArray<UIImage *>*originalImages,
+                                            NSError *error))completionHandle;
 /// Recoder Last Select Picker PHAsset/ALAsset URL.
 @property (nonatomic, strong) NSArray<NSURL *>*selectAssetsURL;
-
 
 /// Categories Use.
 @property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;

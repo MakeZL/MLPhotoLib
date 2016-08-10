@@ -36,24 +36,14 @@
     return _fetchResult;
 }
 
-- (void)addSelectedAssetWith:(MLPhotoAsset *)asset
+- (void)addCameraSelectedAssetWith:(MLPhotoAsset *)asset
 {
     MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
     NSURL *assetURL = [asset assetURL];
     if (assetURL == nil) {
         return;
     }
-    NSInteger index = 0;
-    NSURL *curURL = nil;
-    for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
-        NSURL *url = [[dict allKeys] firstObject];
-        if ([url isEqual:assetURL]) {
-            curURL = url;
-            break;
-        }
-        index++;
-    }
-    
+    NSURL *curURL = [self curURLOfAssetThumbUrl:assetURL];
     [asset getThumbImageWithCompletion:^(UIImage *image) {
         if (![assetURL isEqual:curURL]) {
             [manager.selectsThumbImages addObject:@{assetURL:image}];
@@ -65,6 +55,52 @@
             [manager.selectsOriginalImage addObject:@{assetURL:image}];
         }
     }];
+}
+
+- (void)addSelectedAssetWith:(MLPhotoAsset *)asset
+{
+    MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+    NSURL *assetURL = [asset assetURL];
+    if (assetURL == nil) {
+        return;
+    }
+    if (![manager.selectsUrls containsObject:assetURL]) {
+        // Insert
+        if (manager.selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
+            // Beyond Max Count.
+            [MLImagePickerHUD showMessage:MLMaxCountMessage];
+            return ;
+        }
+        [manager.selectsUrls addObject:assetURL];
+    }
+    
+    NSURL *curURL = [self curURLOfAssetThumbUrl:assetURL];
+    [asset getThumbImageWithCompletion:^(UIImage *image) {
+        if (curURL == nil) {
+            [manager.selectsThumbImages addObject:@{assetURL:image}];
+        }
+    }];
+    
+    [asset getOriginImageWithCompletion:^(UIImage *image) {
+        if (curURL == nil) {
+            [manager.selectsOriginalImage addObject:@{assetURL:image}];
+        }
+    }];
+}
+
+- (NSURL *)curURLOfAssetThumbUrl:(NSURL *)assetURL
+{
+    NSInteger index = 0;
+    NSURL *curURL = nil;
+    for (NSDictionary<NSURL *, UIImage *>*dict in [MLPhotoPickerManager manager].selectsThumbImages) {
+        NSURL *url = [[dict allKeys] firstObject];
+        if ([url isEqual:assetURL]) {
+            curURL = url;
+            break;
+        }
+        index++;
+    }
+    return curURL;
 }
 
 - (void)recoderPickerAssetURLAndImageWith:(MLPhotoAsset *)asset

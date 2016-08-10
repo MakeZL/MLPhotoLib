@@ -15,4 +15,6 @@
 
 @property (strong, nonatomic) MLPhotoAsset *asset;
 
+- (void)activeDidSelecteAsset;
+
 @end

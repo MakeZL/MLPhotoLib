@@ -19,6 +19,7 @@
     [super awakeFromNib];
     
     self.hidden = YES;
+    
     [self.tagButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_icon_image_no"] forState:UIControlStateNormal];
     [self.tagButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_icon_image_yes"] forState:UIControlStateSelected];
 }
@@ -40,7 +41,7 @@
     
     if (isSelected) {
         // Add Recoder
-        [[MLPhotoPickerAssetsManager manager] addSelectedAssetWith:self.asset];
+        [[MLPhotoPickerAssetsManager manager] addCameraSelectedAssetWith:self.asset];
     }
     
 }
@@ -56,6 +57,19 @@
     
     // refresh selectUrl count;
     [[NSNotificationCenter defaultCenter] postNotificationName:MLNotificationDidChangeSelectUrl object:nil];
+}
+
+- (void)activeDidSelecteAsset
+{
+    // Insert
+    if ([MLPhotoPickerManager manager].selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
+        // Beyond Max Count.
+        [MLImagePickerHUD showMessage:MLMaxCountMessage];
+        return ;
+    }
+    // Add Recoder
+    [[MLPhotoPickerAssetsManager manager] addSelectedAssetWith:self.asset];
+    self.tagButton.selected = YES;
 }
 
 @end
