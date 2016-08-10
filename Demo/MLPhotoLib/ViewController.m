@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "MLImagePickerViewController.h"
+#import "MLPhotoBrowserViewController.h"
 
 @interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -71,8 +72,14 @@
     return self.selectThumbImages.count;
 }
 
+/// Photos
+static NSMutableArray *_photosM;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (_photosM == nil) {
+        _photosM = @[].mutableCopy;
+    }
+    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     UIImageView *imageV = [[UIImageView alloc] init];
     imageV.contentMode = UIViewContentModeScaleAspectFill;
@@ -80,7 +87,19 @@
     imageV.image = self.selectThumbImages[indexPath.row];
     [cell.contentView addSubview:imageV];
     
+    MLPhoto *photo = [[MLPhoto alloc] init];
+    photo.photoImageView = imageV;
+    [_photosM addObject:photo];
+    
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MLPhotoBrowserViewController *browserVC = [[MLPhotoBrowserViewController alloc] init];
+    browserVC.curPage = indexPath.item;
+    browserVC.photos = _photosM;
+    [browserVC displayForVC:self];
 }
 
 @end
