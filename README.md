@@ -4,8 +4,8 @@ A New PhotoLib, Compatible with iOS7+, Simple, lightweight
 Being Continual updates.. You are welcome to use.
 
 # Sketch
-<img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/Demo1.png" width="320"><br/>
-<img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/Demo2.png" width="320">
+<img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/1.png" width="320"><br/>
+<img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/2.png" width="320">
 
 # Use
     // UIViewController.m
