@@ -11,6 +11,7 @@
 #import "MLImagePickerHUD.h"
 #import "MLPhotoAsset.h"
 #import "UIButton+Animation.h"
+#import "MLPhotoPickerAssetsManager.h"
 
 @implementation MLImagePickerCollectionViewCell
 
@@ -38,83 +39,19 @@
     self.tagButton.selected = isSelected;
     
     if (isSelected) {
-        NSInteger index = 0;
-        NSURL *curURL = nil;
-        for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
-            NSURL *url = [[dict allKeys] firstObject];
-            if ([url isEqual:assetURL]) {
-                curURL = url;
-                break;
-            }
-            index++;
-        }
-    
-        [self.asset getThumbImageWithCompletion:^(UIImage *image) {
-            if (![assetURL isEqual:curURL]) {
-                [manager.selectsThumbImages addObject:@{assetURL:image}];
-            }
-        }];
-        
-        [self.asset getOriginImageWithCompletion:^(UIImage *image) {
-            if (![assetURL isEqual:curURL]) {
-                [manager.selectsOriginalImage addObject:@{assetURL:image}];
-            }
-        }];
+        // Add Recoder
+        [[MLPhotoPickerAssetsManager manager] addSelectedAssetWith:self.asset];
     }
     
 }
 
 - (IBAction)tagBtnClick
 {
-    MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+    // Recoder Select/Cancle Select Asset
+    [[MLPhotoPickerAssetsManager manager] recoderPickerAssetURLAndImageWith:self.asset];
     
-    NSURL *assetURL = [self.asset assetURL];
-    if (assetURL == nil) {
-        return;
-    }
-    if ([manager.selectsUrls containsObject:assetURL]) {
-        // Delete
-        [manager.selectsUrls removeObject:assetURL];
-    } else {
-        // Insert
-        if (manager.selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
-            // Beyond Max Count.
-            [MLImagePickerHUD showMessage:MLMaxCountMessage];
-            return ;
-        }
-        [manager.selectsUrls addObject:assetURL];
-    }
-    
-    NSInteger index = 0;
-    NSURL *curURL = nil;
-    for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
-        NSURL *url = [[dict allKeys] firstObject];
-        if ([url isEqual:assetURL]) {
-            curURL = url;
-            break;
-        }
-        index++;
-    }
-    
-    [self.asset getThumbImageWithCompletion:^(UIImage *image) {
-        if ([assetURL isEqual:curURL]) {
-            [manager.selectsThumbImages removeObjectAtIndex:index];
-        } else {
-            [manager.selectsThumbImages addObject:@{assetURL:image}];
-        }
-    }];
-    
-    [self.asset getOriginImageWithCompletion:^(UIImage *image) {
-        if ([assetURL isEqual:curURL]) {
-            [manager.selectsOriginalImage removeObjectAtIndex:index];
-        } else {
-            [manager.selectsOriginalImage addObject:@{assetURL:image}];
-        }
-    }];
-    
-    BOOL isSelected = [manager.selectsUrls containsObject:[self.asset assetURL]];
+    BOOL isSelected = [[MLPhotoPickerManager manager].selectsUrls containsObject:[self.asset assetURL]];
     self.tagButton.selected = isSelected;
-    
     [self.tagButton startScaleAnimation];
     
     // refresh selectUrl count;

@@ -16,8 +16,8 @@
 + (BOOL)judgeIsHaveCameraAuthority;
 
 /// 创建一个相册，存在的话不会创建
-+ (void)createAssetAlbumForName:(NSString *)albumName completionHandler:(nullable void(^)(BOOL success, NSError *__nullable error))completionHandler;
++ (void)createAssetAlbumForName:(nullable NSString *)albumName completionHandler:(nullable void(^)(BOOL success, NSError *__nullable error))completionHandler;
 /// 创建一个相册，存在的话不会创建，并创建图片
-+ (void)addAssetAlbumForName:(NSString *)albumName image:(UIImage *)image completionHandler:(nullable void(^)(BOOL success, NSError *__nullable error))completionHandler;
++ (void)addAssetAlbumForName:(nullable NSString *)albumName image:(nullable UIImage *)image completionHandler:(nullable void(^)(BOOL success, NSError *__nullable error))completionHandler;
 
 @end

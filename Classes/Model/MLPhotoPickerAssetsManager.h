@@ -8,8 +8,12 @@
 
 #import <Photos/Photos.h>
 
+@class MLPhotoAsset;
 @interface MLPhotoPickerAssetsManager : PHCachingImageManager
 + (instancetype)manager;
+- (void)recoderPickerAssetURLAndImageWith:(MLPhotoAsset *)asset;
+- (void)addSelectedAssetWith:(MLPhotoAsset *)asset;
 
 @property (nonatomic, strong) PHFetchResult *fetchResult;
+
 @end

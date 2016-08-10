@@ -172,7 +172,7 @@
 - (void)getAssetsPhotoWithURLs:(NSURL *)url callBack:(MLPhotoPickerDataPhotoCallBack)callBack{
     [self.library assetForURL:url resultBlock:^(ALAsset *asset){
         dispatch_async(dispatch_get_main_queue(), ^{
-            callBack([UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]]);
+            callBack((NSArray *)[UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]]);
         });
     } failureBlock:nil];
 }

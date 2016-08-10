@@ -7,6 +7,9 @@
 //
 
 #import "MLPhotoPickerAssetsManager.h"
+#import "MLPhotoPickerManager.h"
+#import "MLPhotoAsset.h"
+#import "MLImagePickerHUD.h"
 
 @implementation MLPhotoPickerAssetsManager
 
@@ -33,4 +36,82 @@
     return _fetchResult;
 }
 
+- (void)addSelectedAssetWith:(MLPhotoAsset *)asset
+{
+    MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+    NSURL *assetURL = [asset assetURL];
+    if (assetURL == nil) {
+        return;
+    }
+    NSInteger index = 0;
+    NSURL *curURL = nil;
+    for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
+        NSURL *url = [[dict allKeys] firstObject];
+        if ([url isEqual:assetURL]) {
+            curURL = url;
+            break;
+        }
+        index++;
+    }
+    
+    [asset getThumbImageWithCompletion:^(UIImage *image) {
+        if (![assetURL isEqual:curURL]) {
+            [manager.selectsThumbImages addObject:@{assetURL:image}];
+        }
+    }];
+    
+    [asset getOriginImageWithCompletion:^(UIImage *image) {
+        if (![assetURL isEqual:curURL]) {
+            [manager.selectsOriginalImage addObject:@{assetURL:image}];
+        }
+    }];
+}
+
+- (void)recoderPickerAssetURLAndImageWith:(MLPhotoAsset *)asset
+{
+    MLPhotoPickerManager *manager = [MLPhotoPickerManager manager];
+    NSURL *assetURL = [asset assetURL];
+    if (assetURL == nil) {
+        return;
+    }
+    if ([manager.selectsUrls containsObject:assetURL]) {
+        // Delete
+        [manager.selectsUrls removeObject:assetURL];
+    } else {
+        // Insert
+        if (manager.selectsUrls.count >= [MLPhotoPickerManager manager].maxCount) {
+            // Beyond Max Count.
+            [MLImagePickerHUD showMessage:MLMaxCountMessage];
+            return ;
+        }
+        [manager.selectsUrls addObject:assetURL];
+    }
+    
+    NSInteger index = 0;
+    NSURL *curURL = nil;
+    for (NSDictionary<NSURL *, UIImage *>*dict in manager.selectsThumbImages) {
+        NSURL *url = [[dict allKeys] firstObject];
+        if ([url isEqual:assetURL]) {
+            curURL = url;
+            break;
+        }
+        index++;
+    }
+    
+    [asset getThumbImageWithCompletion:^(UIImage *image) {
+        if ([assetURL isEqual:curURL]) {
+            [manager.selectsThumbImages removeObjectAtIndex:index];
+        } else {
+            [manager.selectsThumbImages addObject:@{assetURL:image}];
+        }
+    }];
+    
+    [asset getOriginImageWithCompletion:^(UIImage *image) {
+        if ([assetURL isEqual:curURL]) {
+            [manager.selectsOriginalImage removeObjectAtIndex:index];
+        } else {
+            [manager.selectsOriginalImage addObject:@{assetURL:image}];
+        }
+    }];
+}
 @end
