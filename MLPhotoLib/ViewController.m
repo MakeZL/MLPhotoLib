@@ -32,7 +32,6 @@
     pickerVC.maxCount = 3;
     // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
-    
     WeakSelf
     [pickerVC displayForVC:self completionHandle:^(BOOL success, NSArray<NSURL *> *assetUrls, NSArray<UIImage *> *thumbImages, NSArray<UIImage *> *originalImages, NSError *error) {
         

@@ -21,7 +21,7 @@
 
 typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArray<UIImage *>*thumbImages, NSArray<UIImage *>*originalImages, NSError *error);
 
-@interface MLImagePickerViewController ()
+@interface MLImagePickerViewController () <PHPhotoLibraryChangeObserver>
 
 @property (nonatomic, weak) UIView *groupView;
 @property (nonatomic, weak) UITableView *groupTableView;
@@ -104,6 +104,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)setupPickerData
 {
     if (gtiOS8) {
+        [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
         self.imageManager = [[MLPhotoPickerAssetsManager alloc] init];
         self.fetchResult = [self.imageManager fetchResult];
         
@@ -347,8 +348,33 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     [self.tagRightBtn startScaleAnimation];
 }
 
+- (void)photoLibraryDidChange:(PHChange *)changeInstance
+{
+    NSMutableDictionary *dict = [changeInstance valueForKey:@"_collectionChangeDetailsForObjects"];
+    
+    for (PHFetchResultChangeDetails *detail in [dict allValues]) {
+        if (detail.fetchResultAfterChanges.count > detail.fetchResultBeforeChanges.count &&
+            detail.fetchResultAfterChanges.count > self.contentCollectionView.albumAssets.count) {
+            // Insert
+            self.fetchResult = detail.fetchResultAfterChanges;
+            
+            NSMutableArray *assets = self.contentCollectionView.albumAssets.mutableCopy;
+            MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
+            asset.asset = [self.fetchResult firstObject];
+            [assets insertObject:asset atIndex:0];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.contentCollectionView.albumAssets = assets;
+            });
+        }
+    }
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (gtiOS8) {
+        [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
+    }
 }
+
 @end

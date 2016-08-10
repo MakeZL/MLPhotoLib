@@ -60,14 +60,16 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0) {
+    BOOL supportTakeCamera = [MLPhotoPickerManager manager].isSupportTakeCamera;
+    if (supportTakeCamera && indexPath.row == 0) {
         // Camera
         return [self configureCameraCellIndexPath:indexPath];
     }
     
     MLImagePickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MLImagePickerCollectionViewCell class]) forIndexPath:indexPath];
-    if (self.albumAssets.count > indexPath.item) {
-        cell.asset = [self.albumAssets objectAtIndex:indexPath.item];   
+    NSInteger cameraOffset = supportTakeCamera?1:0;
+    if (self.albumAssets.count > indexPath.item-cameraOffset) {
+        cell.asset = [self.albumAssets objectAtIndex:indexPath.item-cameraOffset];
     }
     return cell;
 }
