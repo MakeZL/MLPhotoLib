@@ -1,5 +1,7 @@
 # MLPhotoLib
-A New PhotoLib, Compatible with iOS7,8,9, Simple, lightweight
+A New PhotoLib, Compatible with iOS7+, Simple, lightweight
+
+Being Continual updates.. You are welcome to use.
 
 # Use
     // UIViewController.m
@@ -11,10 +13,10 @@ A New PhotoLib, Compatible with iOS7,8,9, Simple, lightweight
     WeakSelf
     [pickerVC displayForVC:self
           completionHandle:^(BOOL success,
-              NSArray<NSURL *> *assetUrls,
-              NSArray<UIImage *> *thumbImages,
-              NSArray<UIImage *> *originalImages,
-              NSError *error) {
+                             NSArray<NSURL *> *assetUrls,
+                             NSArray<UIImage *> *thumbImages,
+                             NSArray<UIImage *> *originalImages,
+                             NSError *error) {
               if (success) {
                 NSLog(@" Success! ----- ");
 
