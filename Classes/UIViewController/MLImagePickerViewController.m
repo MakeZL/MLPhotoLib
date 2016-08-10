@@ -273,6 +273,17 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     });
 }
 
+- (UIView *)groupTouchView
+{
+    return ({
+        UIView *groupTouchView = [[UIView alloc] initWithFrame:CGRectMake(0, self.groupTableView.frame.size.height + 64, self.groupView.frame.size.width, self.groupView.frame.size.height - self.groupTableView.frame.size.height)];
+        groupTouchView.backgroundColor = [UIColor clearColor];
+        [groupTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappendTitleView)]];
+        [self.groupView addSubview:groupTouchView];
+        groupTouchView;
+    });
+}
+
 - (UIView *)groupView
 {
     return ({
@@ -280,10 +291,10 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             UIView *groupView = [[UIView alloc] initWithFrame:self.view.bounds];
             groupView.alpha = 0.0;
             groupView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-            [groupView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappendTitleView)]];
             [self.view addSubview:_groupView = groupView];
             
             [self groupTableView];
+            [self groupTouchView];
         }
         _groupView;
     });

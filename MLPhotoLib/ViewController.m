@@ -29,20 +29,29 @@
 - (IBAction)actionOpenAlbum
 {
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
+    // Limit Count
     pickerVC.maxCount = 3;
     // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
     WeakSelf
-    [pickerVC displayForVC:self completionHandle:^(BOOL success, NSArray<NSURL *> *assetUrls, NSArray<UIImage *> *thumbImages, NSArray<UIImage *> *originalImages, NSError *error) {
-        
-        weakSelf.selectUrls = assetUrls;
-        weakSelf.selectThumbImages = thumbImages;
-        weakSelf.selectOriginalImages = originalImages;
-        [weakSelf.collectionView reloadData];
-        
-        NSLog(@" assetUrls -- :%@", assetUrls);
-        NSLog(@" thumbImages -- :%@", thumbImages);
-        NSLog(@" originalImages -- :%@", originalImages);
+    [pickerVC displayForVC:self
+          completionHandle:^(BOOL success,
+                             NSArray<NSURL *> *assetUrls,
+                             NSArray<UIImage *> *thumbImages,
+                             NSArray<UIImage *> *originalImages,
+                             NSError *error) {
+          if (success) {
+              NSLog(@" Success! ----- ");
+              
+              weakSelf.selectUrls = assetUrls;
+              weakSelf.selectThumbImages = thumbImages;
+              weakSelf.selectOriginalImages = originalImages;
+              [weakSelf.collectionView reloadData];
+              
+              NSLog(@" assetUrls -- :%@", assetUrls);
+              NSLog(@" thumbImages -- :%@", thumbImages);
+              NSLog(@" originalImages -- :%@", originalImages);
+          }
     }];
 }
 

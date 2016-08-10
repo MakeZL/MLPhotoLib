@@ -1,25 +1,33 @@
 # MLPhotoLib
 A New PhotoLib, Compatible with iOS7,8,9, Simple, lightweight
 
-
 # Use
     // UIViewController.m
     MLImagePickerViewController *pickerVC = [MLImagePickerViewController pickerViewController];
+    // Limit Count
     pickerVC.maxCount = 3;
     // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
-
     WeakSelf
-    [pickerVC displayForVC:self completionHandle:^(BOOL success, NSArray<NSURL *> *assetUrls, NSArray<UIImage *> *thumbImages, NSArray<UIImage *> *originalImages, NSError *error) {
-        weakSelf.selectUrls = assetUrls;
-        weakSelf.selectThumbImages = thumbImages;
-        weakSelf.selectOriginalImages = originalImages;
-        [weakSelf.collectionView reloadData];
+    [pickerVC displayForVC:self
+          completionHandle:^(BOOL success,
+              NSArray<NSURL *> *assetUrls,
+              NSArray<UIImage *> *thumbImages,
+              NSArray<UIImage *> *originalImages,
+              NSError *error) {
+              if (success) {
+                NSLog(@" Success! ----- ");
 
-        NSLog(@" assetUrls -- :%@", assetUrls);
-        NSLog(@" thumbImages -- :%@", thumbImages);
-        NSLog(@" originalImages -- :%@", originalImages);
-    }];
+                weakSelf.selectUrls = assetUrls;
+                weakSelf.selectThumbImages = thumbImages;
+                weakSelf.selectOriginalImages = originalImages;
+                [weakSelf.collectionView reloadData];
+
+                NSLog(@" assetUrls -- :%@", assetUrls);
+                NSLog(@" thumbImages -- :%@", thumbImages);
+                NSLog(@" originalImages -- :%@", originalImages);
+            }
+        }];
 
 # Contact
 @weibo : [我的微博](http://weibo.com/makezl/)
