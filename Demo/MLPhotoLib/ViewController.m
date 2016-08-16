@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "MLImagePickerViewController.h"
 #import "MLPhotoBrowserViewController.h"
+#import "MLImagePickerMenuTableViewCell.h"
 
 @interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;

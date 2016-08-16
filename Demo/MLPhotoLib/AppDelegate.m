@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "MLImagePickerMenuTableViewCell.h"
 
 @interface AppDelegate ()
 

@@ -7,11 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface MLPhoto : NSObject
-@property (strong, nonatomic) NSURL *originalImageUrl;
-@property (strong, nonatomic) UIImageView *photoImageView;
-@end
+#import "MLPhoto.h"
 
 @interface MLPhotoBrowserViewController : UIViewController
 /// CurPage
