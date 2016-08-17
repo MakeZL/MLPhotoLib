@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "MLPhotoLib"
-s.version      = "0.1"
+s.version      = "0.1.0"
 s.summary      = "A New PhotoLib, Compatible with iOS7+, Simple, lightweight."
 
 s.description  = <<-DESC
@@ -21,8 +21,8 @@ s.ios.deployment_target = "8.0"
 
 s.source       = { :git => "https://github.com/MakeZL/MLPhotoLib.git", :tag => s.version }
 
-s.source_files  = "MLPhotoLib/Classes/**/*.{h,m}"
-s.resource = "MLPhotoLib/Classes/MLImagePickerController.bundle"
+s.source_files  = "MLPhotoLib/MLPhotoPicker/*.{h,m}"
+s.resource = "MLPhotoLib/MLImagePickerController.bundle"
 
 s.requires_arc = true
 s.framework = "Photos","AssetsLibrary"
