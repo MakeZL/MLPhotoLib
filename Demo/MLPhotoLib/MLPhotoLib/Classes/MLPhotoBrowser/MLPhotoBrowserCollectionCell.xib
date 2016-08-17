@@ -19,8 +19,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b5s-lC-n3A">
                                 <rect key="frame" x="0.0" y="0.0" width="331" height="472"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xyq-rU-5rS">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="472"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xyq-rU-5rS">
+                                        <rect key="frame" x="65.5" y="136" width="200" height="200"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="faU-cF-n8N"/>
+                                            <constraint firstAttribute="height" constant="200" id="zlq-Ez-sGf"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -31,13 +35,23 @@
                                     <constraint firstAttribute="trailing" secondItem="Xyq-rU-5rS" secondAttribute="trailing" id="K9o-wn-jXe"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="leading" secondItem="b5s-lC-n3A" secondAttribute="leading" id="MPO-Yx-H2i"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="900" id="QAu-b0-hBN"/>
+                                    <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerY" secondItem="b5s-lC-n3A" secondAttribute="centerY" id="UaC-mL-D7h"/>
                                     <constraint firstAttribute="bottom" secondItem="Xyq-rU-5rS" secondAttribute="bottom" id="VTw-bq-Udd"/>
+                                    <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerX" secondItem="b5s-lC-n3A" secondAttribute="centerX" id="flJ-Zr-fhR"/>
+                                    <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerX" secondItem="b5s-lC-n3A" secondAttribute="centerX" id="utN-gM-bLE"/>
+                                    <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerY" secondItem="b5s-lC-n3A" secondAttribute="centerY" id="xXF-iw-i0b"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="7Y1-hh-0gP"/>
                                         <exclude reference="BHz-RT-lRu"/>
                                         <exclude reference="QAu-b0-hBN"/>
+                                        <exclude reference="48k-A7-tJG"/>
+                                        <exclude reference="K9o-wn-jXe"/>
+                                        <exclude reference="MPO-Yx-H2i"/>
+                                        <exclude reference="UaC-mL-D7h"/>
+                                        <exclude reference="VTw-bq-Udd"/>
+                                        <exclude reference="utN-gM-bLE"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -70,6 +84,8 @@
             <connections>
                 <outlet property="containerView" destination="b5s-lC-n3A" id="Yb5-uF-MfV"/>
                 <outlet property="imageView" destination="Xyq-rU-5rS" id="dGi-uW-7wy"/>
+                <outlet property="imageViewHeightLayoutConstraint" destination="zlq-Ez-sGf" id="UPS-KZ-EEj"/>
+                <outlet property="imageViewWidthLayoutConstraint" destination="faU-cF-n8N" id="Pg1-HV-kPB"/>
                 <outlet property="scrollView" destination="9eK-eX-oUh" id="WXC-jg-nda"/>
             </connections>
             <point key="canvasLocation" x="204.5" y="332"/>

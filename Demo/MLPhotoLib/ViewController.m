@@ -89,7 +89,8 @@ static NSMutableArray *_photosM;
     [cell.contentView addSubview:imageV];
     
     MLPhoto *photo = [[MLPhoto alloc] init];
-    photo.photoImageView = imageV;
+    photo.origianlImage = self.selectOriginalImages[indexPath.row];
+    photo.thumbImage = self.selectThumbImages[indexPath.row];
     [_photosM addObject:photo];
     
     return cell;
@@ -98,6 +99,7 @@ static NSMutableArray *_photosM;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MLPhotoBrowserViewController *browserVC = [[MLPhotoBrowserViewController alloc] init];
+//    browserVC.editMode = YES;
     browserVC.curPage = indexPath.item;
     browserVC.photos = _photosM;
     [browserVC displayForVC:self];

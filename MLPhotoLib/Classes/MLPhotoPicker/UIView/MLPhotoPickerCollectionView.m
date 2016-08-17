@@ -12,15 +12,30 @@
 #import "MLPhotoKitData.h"
 #import "MLPhotoPickerData.h"
 
-@interface MLPhotoPickerCollectionView () <UICollectionViewDelegate, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+// ----- PhotoBrowser -----
+#import "MLPhotoBrowserViewController.h"
+
+@interface MLPhotoPickerCollectionView () <
+                                        UICollectionViewDelegate,
+                                        UICollectionViewDataSource,
+                                        UIImagePickerControllerDelegate,
+                                        UINavigationControllerDelegate,
+                                        MLPhotoBrowserViewControllerDelegate
+                                        >
 @property (nonatomic, weak) UICollectionView *collectionView;
+@property (nonatomic, strong) NSMutableArray *photos;
 @end
 
 @implementation MLPhotoPickerCollectionView
 
-- (void)setAlbumAssets:(NSArray *)albumAssets{
+- (void)setAlbumAssets:(NSArray<MLPhotoAsset *>*)albumAssets{
     _albumAssets = albumAssets;
     
+    _photos = [NSMutableArray arrayWithCapacity:albumAssets.count];
+    for (NSInteger i = 0; i < albumAssets.count; i++) {
+        MLPhoto *photo = [[MLPhoto alloc] init];
+        [_photos addObject:photo];
+    }
     [self.collectionView reloadData];
 }
 
@@ -86,7 +101,30 @@
         imagePickerVC.delegate = self;
         imagePickerVC.allowsEditing = YES;
         [[MLPhotoPickerManager manager].navigationController presentViewController:imagePickerVC animated:YES completion:nil];
+        return;
     }
+    
+    MLPhotoBrowserViewController *photoBrowserVC = [[MLPhotoBrowserViewController alloc] init];
+    NSInteger index = ([MLPhotoPickerManager manager].isSupportTakeCamera) ? indexPath.item - 1: indexPath.item;
+    MLPhotoAsset *asset = self.albumAssets[index];
+    MLPhoto *photo = self.photos[index];
+    if (photo.thumbImage == nil) {
+        [asset getThumbImageWithCompletion:^(UIImage *image) {
+            photo.thumbImage = image;
+            [photoBrowserVC reloadDataForIndex:index];
+        }];
+    }
+    if (photo.origianlImage == nil) {
+        [asset getOriginImageWithCompletion:^(UIImage *image) {
+            photo.origianlImage = image;
+            [photoBrowserVC reloadDataForIndex:index];
+        }];
+    }
+    photoBrowserVC.delegate = self;
+    photoBrowserVC.curPage = index;
+    photoBrowserVC.editMode = YES;
+    photoBrowserVC.photos = _photos;
+    [photoBrowserVC displayForVC:[[[MLPhotoPickerManager manager].navigationController childViewControllers] firstObject]];
 }
 
 - (UICollectionViewCell *)configureCameraCellIndexPath:(NSIndexPath *)indexPath
@@ -113,7 +151,6 @@
     } else {
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         [library writeImageToSavedPhotosAlbum:[editedImage CGImage] orientation:(ALAssetOrientation)editedImage.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
-            
         }];
     }
     
@@ -133,6 +170,26 @@
             ) == YES) {
             [cell activeDidSelecteAsset];
         }
+    }
+}
+
+#pragma makr - <MLPhotoBrowserViewControllerDelegate>
+- (void)photoBrowser:(MLPhotoBrowserViewController *)photoBrowser didScrollToPage:(NSInteger)page
+{
+    NSInteger index = page;
+    MLPhotoAsset *asset = self.albumAssets[index];
+    MLPhoto *photo = self.photos[index];
+    if (photo.thumbImage == nil) {
+        [asset getThumbImageWithCompletion:^(UIImage *image) {
+            photo.thumbImage = image;
+            [photoBrowser reloadDataForIndex:page];
+        }];
+    }
+    if (photo.origianlImage == nil) {
+        [asset getOriginImageWithCompletion:^(UIImage *image) {
+            photo.origianlImage = image;
+            [photoBrowser reloadDataForIndex:page];
+        }];
     }
 }
 @end

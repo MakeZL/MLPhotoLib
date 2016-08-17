@@ -10,6 +10,9 @@
 
 @interface MLPhoto : NSObject
 @property (strong, nonatomic) NSURL *originalImageUrl;
-@property (strong, nonatomic) UIImageView *photoImageView;
+@property (strong, nonatomic) UIImage *origianlImage;
+
+@property (strong, nonatomic) NSURL *thumbImageUrl;
+@property (strong, nonatomic) UIImage *thumbImage;
 @end
 

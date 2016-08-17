@@ -61,7 +61,12 @@
     if (self.isPHAsset) {
         // PhotoKit
         CGSize targetSize = [UIScreen mainScreen].bounds.size;
-        [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        
+        PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
+        requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        requestOptions.networkAccessAllowed = YES;
+        
+        [[MLPhotoPickerAssetsManager manager] requestImageForAsset:_asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:requestOptions resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             if ([[info valueForKey:@"PHImageResultIsDegradedKey"] integerValue] == 0) {
                 !completion?:completion(result);
             }
