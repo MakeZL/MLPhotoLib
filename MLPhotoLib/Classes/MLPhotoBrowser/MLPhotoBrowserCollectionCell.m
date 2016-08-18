@@ -7,7 +7,7 @@
 //
 
 #import "MLPhotoBrowserCollectionCell.h"
-#import "ZLPhotoRect.h"
+#import "MLPhotoRect.h"
 #import "MLPhoto.h"
 
 @interface MLPhotoBrowserCollectionCell ()
@@ -39,7 +39,7 @@
     }
     
     [self.imageView setImage:image];
-    CGSize imageSize = [ZLPhotoRect setMaxMinZoomScalesForCurrentBoundWithImage:image].size;
+    CGSize imageSize = [MLPhotoRect setMaxMinZoomScalesForCurrentBoundWithImage:image].size;
     self.imageViewWidthLayoutConstraint.constant = imageSize.width;
     self.imageViewHeightLayoutConstraint.constant = imageSize.height;
 }

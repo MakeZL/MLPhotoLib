@@ -17,10 +17,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="99" height="99"/>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k9h-Az-Tx1">
-                        <rect key="frame" x="71" y="5" width="23" height="23"/>
+                        <rect key="frame" x="66" y="5" width="28" height="28"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="23" id="6ry-1m-Pap"/>
-                            <constraint firstAttribute="height" constant="23" id="uvb-WA-Yqp"/>
+                            <constraint firstAttribute="width" constant="28" id="6ry-1m-Pap"/>
+                            <constraint firstAttribute="height" constant="28" id="uvb-WA-Yqp"/>
                         </constraints>
                         <connections>
                             <action selector="tagBtnClick" destination="gTV-IL-0wX" eventType="touchUpInside" id="XdR-Ln-04m"/>

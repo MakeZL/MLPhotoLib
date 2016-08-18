@@ -8,8 +8,10 @@
 
 #import "MLPhotoBrowserViewController.h"
 #import "MLPhotoBrowserCollectionCell.h"
-#import "MLPhotoBrowserNavigationViewController.h"
-#import "ZLPhotoRect.h"
+#import "MLNavigationViewController.h"
+#import "MLPhotoPickerManager.h"
+#import "MLImagePickerHUD.h"
+#import "MLPhotoRect.h"
 
 @interface MLPhotoBrowserViewController () <UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -23,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self addNavigationBarTitleView];
@@ -80,7 +82,6 @@
 {
     [super viewWillAppear:animated];
     
-    [self setStatusBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -89,16 +90,19 @@
     
     [self.rightButton removeFromSuperview];
     [self.titleButton removeFromSuperview];
-    [self setStatusBarHidden:NO];
 }
 
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
     self.statusBarHiddenFlag = hidden;
-    [self prefersStatusBarHidden];
-    [UIView animateWithDuration:animated?0.3:0.0 animations:^{
-        [self setNeedsStatusBarAppearanceUpdate];
-    }];
+    if (gtiOS8) {
+        [self prefersStatusBarHidden];
+        [UIView animateWithDuration:animated?0.3:0.0 animations:^{
+            [self setNeedsStatusBarAppearanceUpdate];
+        }];
+    } else {
+        [[UIApplication sharedApplication] setStatusBarHidden:self.statusBarHiddenFlag withAnimation:UIStatusBarAnimationFade];
+    }
 }
 
 - (void)setStatusBarHidden:(BOOL)hidden
@@ -118,7 +122,23 @@
 
 - (void)rightBtnClick
 {
-    
+    MLPhoto *photo = [self.photos objectAtIndex:self.curPage];
+    if (photo.assetUrl) {
+        if ([[MLPhotoPickerManager manager].selectsUrls containsObject:photo.assetUrl]) {
+            // Remove
+            [[MLPhotoPickerManager manager].selectsUrls removeObject:photo.assetUrl];
+        } else {
+            // Insert
+            if ([MLPhotoPickerManager manager].isBeyondMaxCount)
+            {
+                [MLImagePickerHUD showMessage:MLMaxCountMessage];
+                return;
+            }
+            [[MLPhotoPickerManager manager].selectsUrls addObject:photo.assetUrl];
+        }
+        [self updateRightButtonStatus];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MLNotificationPhotoBrowserDidChangeSelectUrl object:nil];
+    }
 }
 
 - (void)displayForVC:(__weak UIViewController *)viewController
@@ -129,7 +149,7 @@
     }
     
     if (viewController.navigationController == nil) {
-        MLPhotoBrowserNavigationViewController *navigationVC = [[MLPhotoBrowserNavigationViewController alloc] initWithRootViewController:self];
+        MLNavigationViewController *navigationVC = [[MLNavigationViewController alloc] initWithRootViewController:self];
         [viewController presentViewController:navigationVC animated:YES completion:nil];
     } else {
         [viewController.navigationController pushViewController:self animated:YES];
@@ -211,9 +231,15 @@
     cell.photo = [self.photos objectAtIndex:indexPath.item];
     __weak typeof(self)weakSelf = self;
     cell.didTapBlock = ^{
+        [weakSelf setStatusBarHidden:!weakSelf.navigationController.navigationBar.isHidden];
         [weakSelf.navigationController setNavigationBarHidden:!weakSelf.navigationController.navigationBar.isHidden animated:YES];
     };
     return cell;
+}
+
+- (BOOL)whetherRecordAsset:(NSURL *)assetUrl
+{
+    return [[MLPhotoPickerManager manager].selectsUrls containsObject:assetUrl];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -228,8 +254,6 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-//    MLPhoto *photo = [self.photos objectAtIndex:self.curPage];
-//    [self.rightButton setSelected:YES];
     [self updateTitleView];
     
     if ([self.delegate respondsToSelector:@selector(photoBrowser:didScrollToPage:)]) {
@@ -241,6 +265,13 @@
 {
     NSString *title = [NSString stringWithFormat:@"%@/%@",@(self.curPage+1),@(self.photos.count)];
     [self.titleButton setTitle:title forState:UIControlStateNormal];
+    [self updateRightButtonStatus];
+}
+
+- (void)updateRightButtonStatus
+{
+    MLPhoto *photo = [self.photos objectAtIndex:self.curPage];
+    [self.rightButton setSelected:[self whetherRecordAsset:photo.assetUrl]];
 }
 
 - (void)reloadData

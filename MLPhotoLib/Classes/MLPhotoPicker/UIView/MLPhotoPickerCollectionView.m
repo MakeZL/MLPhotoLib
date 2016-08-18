@@ -10,6 +10,7 @@
 #import "MLImagePickerCollectionViewCell.h"
 #import "MLPhotoPickerManager.h"
 #import "MLPhotoKitData.h"
+#import "MLImagePickerHUD.h"
 #import "MLPhotoPickerData.h"
 
 // ----- PhotoBrowser -----
@@ -22,7 +23,6 @@
                                         UINavigationControllerDelegate,
                                         MLPhotoBrowserViewControllerDelegate
                                         >
-@property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *photos;
 @end
 
@@ -95,6 +95,11 @@
     if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0 &&
         [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
         ) {
+        
+        if ([MLPhotoPickerManager manager].isBeyondMaxCount) {
+            [MLImagePickerHUD showMessage:MLMaxCountMessage];
+            return;
+        }
         UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
         UIImagePickerControllerSourceType sourcheType = UIImagePickerControllerSourceTypeCamera;
         imagePickerVC.sourceType = sourcheType;
@@ -108,6 +113,7 @@
     NSInteger index = ([MLPhotoPickerManager manager].isSupportTakeCamera) ? indexPath.item - 1: indexPath.item;
     MLPhotoAsset *asset = self.albumAssets[index];
     MLPhoto *photo = self.photos[index];
+    photo.assetUrl = asset.assetURL;
     if (photo.thumbImage == nil) {
         [asset getThumbImageWithCompletion:^(UIImage *image) {
             photo.thumbImage = image;
@@ -179,6 +185,7 @@
     NSInteger index = page;
     MLPhotoAsset *asset = self.albumAssets[index];
     MLPhoto *photo = self.photos[index];
+    photo.assetUrl = asset.assetURL;
     if (photo.thumbImage == nil) {
         [asset getThumbImageWithCompletion:^(UIImage *image) {
             photo.thumbImage = image;
