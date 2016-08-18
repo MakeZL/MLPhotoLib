@@ -1,14 +1,14 @@
 //
-//  ZLPhotoRect.m
-//  ZLAssetsPickerDemo
+//  MLPhotoRect.m
+//  MLPhotoLib
 //
-//  Created by 张磊 on 15/8/21.
-//  Copyright (c) 2015年 com.zixue101.www. All rights reserved.
+//  Created by leisuro on 16/8/16.
+//  Copyright © 2016年 Free. All rights reserved.
 //
 
-#import "ZLPhotoRect.h"
+#import "MLPhotoRect.h"
 
-@implementation ZLPhotoRect
+@implementation MLPhotoRect
 + (CGRect)setMaxMinZoomScalesForCurrentBoundWithImage:(UIImage *)image{
     if (!([image isKindOfClass:[UIImage class]]) || image == nil) {
         if (!([image isKindOfClass:[UIImage class]])) {

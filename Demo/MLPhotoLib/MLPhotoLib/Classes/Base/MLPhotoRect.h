@@ -1,14 +1,14 @@
 //
-//  ZLPhotoRect.h
-//  ZLAssetsPickerDemo
+//  MLPhotoRect.h
+//  MLPhotoLib
 //
-//  Created by 张磊 on 15/8/21.
-//  Copyright (c) 2015年 com.zixue101.www. All rights reserved.
+//  Created by leisuro on 16/8/16.
+//  Copyright © 2016年 Free. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ZLPhotoRect : NSObject
+@interface MLPhotoRect : NSObject
 + (CGRect)setMaxMinZoomScalesForCurrentBoundWithImage:(UIImage *)image;
 + (CGRect)setMaxMinZoomScalesForCurrentBoundWithImageView:(UIImageView *)imageView;
 @end

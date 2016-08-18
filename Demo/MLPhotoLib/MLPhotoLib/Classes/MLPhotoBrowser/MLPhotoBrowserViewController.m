@@ -8,10 +8,10 @@
 
 #import "MLPhotoBrowserViewController.h"
 #import "MLPhotoBrowserCollectionCell.h"
-#import "MLPhotoBrowserNavigationViewController.h"
+#import "MLNavigationViewController.h"
 #import "MLPhotoPickerManager.h"
 #import "MLImagePickerHUD.h"
-#import "ZLPhotoRect.h"
+#import "MLPhotoRect.h"
 
 @interface MLPhotoBrowserViewController () <UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -149,7 +149,7 @@
     }
     
     if (viewController.navigationController == nil) {
-        MLPhotoBrowserNavigationViewController *navigationVC = [[MLPhotoBrowserNavigationViewController alloc] initWithRootViewController:self];
+        MLNavigationViewController *navigationVC = [[MLNavigationViewController alloc] initWithRootViewController:self];
         [viewController presentViewController:navigationVC animated:YES completion:nil];
     } else {
         [viewController.navigationController pushViewController:self animated:YES];

@@ -23,7 +23,7 @@
     _group = group;
     
     self.titleLbl.text = [group groupName];
-    self.assetCountLbl.text = [NSString stringWithFormat:@"( %ld )",[group assetsCount]];
+    self.assetCountLbl.text = [NSString stringWithFormat:@"( %ld )",(long)[group assetsCount]];
 }
 
 - (void)setSelected:(BOOL)selected
