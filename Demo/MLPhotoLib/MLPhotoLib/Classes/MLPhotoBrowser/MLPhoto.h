@@ -14,5 +14,8 @@
 
 @property (strong, nonatomic) NSURL *thumbImageUrl;
 @property (strong, nonatomic) UIImage *thumbImage;
+
+/// Asset URL
+@property (strong, nonatomic) NSURL *assetUrl;
 @end
 

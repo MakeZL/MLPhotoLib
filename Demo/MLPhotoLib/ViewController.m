@@ -14,9 +14,13 @@
 @interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
-@property (nonatomic, strong) NSArray *selectUrls;
-@property (nonatomic, strong) NSArray *selectThumbImages;
-@property (nonatomic, strong) NSArray *selectOriginalImages;
+// ----- PhotoPicker -----
+@property (nonatomic, strong) NSArray<NSURL *>*selectUrls;
+@property (nonatomic, strong) NSArray<UIImage *>*selectThumbImages;
+@property (nonatomic, strong) NSArray<UIImage *>*selectOriginalImages;
+
+// ----- PhotoBrowser -----
+@property (nonatomic, strong) NSMutableArray<MLPhoto *>*photos;
 @end
 
 @implementation ViewController
@@ -24,7 +28,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
 }
 
 /// IBAction
@@ -50,6 +53,9 @@
               weakSelf.selectOriginalImages = originalImages;
               [weakSelf.collectionView reloadData];
               
+              /// PhotoBrowser
+              [weakSelf configurePhotoBrowserThumbImages:thumbImages origianlImages:originalImages];
+              
               NSLog(@" assetUrls -- :%@", assetUrls);
               NSLog(@" thumbImages -- :%@", thumbImages);
               NSLog(@" originalImages -- :%@", originalImages);
@@ -60,6 +66,24 @@
 - (IBAction)actionQuickPrev
 {
     
+}
+
+- (void)configurePhotoBrowserThumbImages:(NSArray *)thumbImages origianlImages:(NSArray *)origianlImages
+{
+    if (!_photosM) {
+        _photosM = [NSMutableArray arrayWithCapacity:thumbImages.count];
+    }
+    [_photosM removeAllObjects];
+    
+    for (NSInteger i = 0; i < thumbImages.count; i++)
+    {
+        MLPhoto *photo = [[MLPhoto alloc] init];
+        photo.thumbImage = thumbImages[i];
+        if (origianlImages.count > i) {
+            photo.origianlImage = origianlImages[i];
+        }
+        [_photosM addObject:photo];
+    }
 }
 
 #pragma mark - Demo
@@ -77,21 +101,13 @@
 static NSMutableArray *_photosM;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_photosM == nil) {
-        _photosM = @[].mutableCopy;
-    }
-    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    
     UIImageView *imageV = [[UIImageView alloc] init];
     imageV.contentMode = UIViewContentModeScaleAspectFill;
     imageV.frame = cell.bounds;
     imageV.image = self.selectThumbImages[indexPath.row];
     [cell.contentView addSubview:imageV];
-    
-    MLPhoto *photo = [[MLPhoto alloc] init];
-    photo.origianlImage = self.selectOriginalImages[indexPath.row];
-    photo.thumbImage = self.selectThumbImages[indexPath.row];
-    [_photosM addObject:photo];
     
     return cell;
 }

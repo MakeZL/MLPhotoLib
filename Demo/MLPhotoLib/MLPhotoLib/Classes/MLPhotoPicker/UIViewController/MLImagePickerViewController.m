@@ -188,6 +188,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)addSelectAssetNotification
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationDidChangeSelectUrl) name:MLNotificationDidChangeSelectUrl object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationPhotoBrowserDidChangeSelectUrl) name:MLNotificationPhotoBrowserDidChangeSelectUrl object:nil];
 }
 
 - (void)groupsWithAsset:(NSArray *)groups
@@ -384,6 +386,14 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         self.navigationBarRightItemBtn.hidden = (selectsUrlsCount < 1);
         [self.navigationBarRightItemBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
         [self.navigationBarRightItemBtn startScaleAnimation];
+    });
+}
+
+- (void)notificationPhotoBrowserDidChangeSelectUrl
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self notificationDidChangeSelectUrl];
+        [self.contentCollectionView.collectionView reloadData];
     });
 }
 

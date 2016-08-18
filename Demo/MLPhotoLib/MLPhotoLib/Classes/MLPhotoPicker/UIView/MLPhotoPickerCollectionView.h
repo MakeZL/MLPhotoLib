@@ -12,4 +12,6 @@
 @interface MLPhotoPickerCollectionView : UIView
 @property (strong,nonatomic) MLPhotoPickerGroup *group;
 @property (strong,nonatomic) NSArray<MLPhotoAsset *> *albumAssets;
+
+@property (nonatomic, weak) UICollectionView *collectionView;
 @end

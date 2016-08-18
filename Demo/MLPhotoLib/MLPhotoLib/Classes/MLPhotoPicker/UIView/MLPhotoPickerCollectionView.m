@@ -23,7 +23,6 @@
                                         UINavigationControllerDelegate,
                                         MLPhotoBrowserViewControllerDelegate
                                         >
-@property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *photos;
 @end
 
@@ -114,6 +113,7 @@
     NSInteger index = ([MLPhotoPickerManager manager].isSupportTakeCamera) ? indexPath.item - 1: indexPath.item;
     MLPhotoAsset *asset = self.albumAssets[index];
     MLPhoto *photo = self.photos[index];
+    photo.assetUrl = asset.assetURL;
     if (photo.thumbImage == nil) {
         [asset getThumbImageWithCompletion:^(UIImage *image) {
             photo.thumbImage = image;
@@ -185,6 +185,7 @@
     NSInteger index = page;
     MLPhotoAsset *asset = self.albumAssets[index];
     MLPhoto *photo = self.photos[index];
+    photo.assetUrl = asset.assetURL;
     if (photo.thumbImage == nil) {
         [asset getThumbImageWithCompletion:^(UIImage *image) {
             photo.thumbImage = image;
