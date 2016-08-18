@@ -82,11 +82,20 @@
 {
     [super viewWillAppear:animated];
     
+    self.rightButton.hidden = NO;
+    self.titleButton.hidden = NO;
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    
+    self.rightButton.hidden = YES;
+    self.titleButton.hidden = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     
     [self.rightButton removeFromSuperview];
     [self.titleButton removeFromSuperview];
@@ -154,65 +163,7 @@
     } else {
         [viewController.navigationController pushViewController:self animated:YES];
     }
-    
-//    CGRect tempF = [curPhoto.photoImageView.superview convertRect:curPhoto.photoImageView.frame toView:[self getParsentViewController:curPhoto.photoImageView]];
-//    
-//    UIWindow *window = [self getCurWindowWithView:viewController.view];
-//    UIView *imageContainerView = [[UIView alloc] init];
-//    imageContainerView.backgroundColor = [UIColor clearColor];
-//    imageContainerView.frame = tempF;
-//    [window addSubview:_imageContainerView = imageContainerView];
-//    
-//    UIImageView *imageView = [[UIImageView alloc] init];
-//    imageView.contentMode = UIViewContentModeScaleAspectFill;
-//    imageView.image = curPhoto.photoImageView.image;
-//    imageView.frame = imageContainerView.bounds;
-//    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//    [imageContainerView addSubview:imageView];
-//    
-//    CGRect imageFrame = [ZLPhotoRect setMaxMinZoomScalesForCurrentBoundWithImageView:curPhoto.photoImageView];
-//    [UIView animateWithDuration:1.0 animations:^{
-//        imageContainerView.frame = imageFrame;
-//    } completion:^(BOOL finished) {
-//        imageContainerView.hidden = YES;
-//        [viewController presentViewController:self animated:NO completion:nil];
-//    }];
 }
-
-- (void)dismiss
-{
-//    self.imageContainerView.hidden = NO;
-//    [self.collectionView removeFromSuperview];
-//    [self.view removeFromSuperview];
-    
-//    CGRect imageFrame = [ZLPhotoRect setMaxMinZoomScalesForCurrentBoundWithImageView:curPhoto.photoImageView];
-    
-//    if (self.curPage < self.photos.count) {
-//        MLPhoto *photo = [self.photos objectAtIndex:self.curPage];
-//        [UIView animateWithDuration:1.0 animations:^{
-//            self.imageContainerView.frame = photo.photoImageView.frame;
-//        } completion:^(BOOL finished) {
-//            [self.imageContainerView removeFromSuperview];
-//            [self dismissViewControllerAnimated:NO completion:nil];
-//        }];
-//    }
-}
-
-//- (UIWindow *)getCurWindowWithView:(UIResponder *)view
-//{
-//    if (view == nil || [view isKindOfClass:[UIWindow class]]) {
-//        return (UIWindow *)view;
-//    }
-//    return [self getCurWindowWithView:[view nextResponder]];
-//}
-//
-//- (UIView *)getParsentViewController:(UIView *)view
-//{
-//    if ([[view nextResponder] isKindOfClass:[UIViewController class]] || view == nil) {
-//        return (UIView *)[view nextResponder];
-//    }
-//    return [self getParsentViewController:view.superview];
-//}
 
 #pragma mark - <UICollectionViewDataSource/UICollectionViewDelegate>
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
