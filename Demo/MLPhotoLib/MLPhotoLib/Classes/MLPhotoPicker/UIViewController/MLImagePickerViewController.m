@@ -23,11 +23,15 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 
 @interface MLImagePickerViewController () <PHPhotoLibraryChangeObserver>
 
+/// ----- UI ------
+@property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
 @property (nonatomic, weak) UIView *groupView;
 @property (nonatomic, weak) UITableView *groupTableView;
-@property (nonatomic, strong) MLPhotoPickerCollectionView *contentCollectionView;
-@property (nonatomic, weak) UIButton *tagRightBtn;
 
+@property (nonatomic, weak) UIButton *navigationBarRightItemBtn;
+@property (nonatomic, weak) UIView *navigationBarRightItemView;
+
+/// ----- Data -----
 @property (nonatomic, strong) MLPhotoPickerAssetsManager *imageManager;
 @property (nonatomic, strong) MLPhotoPickerManager *pickerManager;
 @property (nonatomic, strong) PHFetchResult *fetchResult;
@@ -79,6 +83,29 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.navigationBarRightItemView.hidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.navigationBarRightItemView.hidden = YES;
+}
+
+- (void)dealloc
+{
+    [self.navigationBarRightItemBtn removeFromSuperview];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (gtiOS8) {
+        [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -97,7 +124,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationItem.titleView = [self addTitleView];
-    [self addNavigationBarRightView];
+    [self addNavigationBarRightItemView];
     [self.view addSubview:_contentCollectionView = [[MLPhotoPickerCollectionView alloc] initWithFrame:(CGRect){CGPointMake(0, 34), CGSizeMake(self.view.frame.size.width, self.view.frame.size.height - self.navigationController.navigationBar.frame.size.height)}]];
 }
 
@@ -230,7 +257,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     });
 }
 
-- (void)addNavigationBarRightView
+- (void)addNavigationBarRightItemView
 {
     ({
         UIView *rightView = [[UIView alloc] init];
@@ -242,16 +269,16 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         [rightBtn setTitle:@"完成" forState:UIControlStateNormal];
         [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
         [rightView addSubview:rightBtn];
-        [self.navigationController.navigationBar addSubview:rightView];
+        [self.navigationController.navigationBar addSubview:_navigationBarRightItemView = rightView];
         
-        UIButton *tagRightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        tagRightBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        tagRightBtn.titleLabel.textColor = [UIColor whiteColor];
-        tagRightBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-        tagRightBtn.layer.cornerRadius = 10;
-        tagRightBtn.frame = CGRectMake(30, 0, 20, 20);
-        tagRightBtn.backgroundColor = [UIColor redColor];
-        [rightView addSubview:_tagRightBtn = tagRightBtn];
+        UIButton *navigationBarRightItemBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        navigationBarRightItemBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        navigationBarRightItemBtn.titleLabel.textColor = [UIColor whiteColor];
+        navigationBarRightItemBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        navigationBarRightItemBtn.layer.cornerRadius = 10;
+        navigationBarRightItemBtn.frame = CGRectMake(30, 0, 20, 20);
+        navigationBarRightItemBtn.backgroundColor = [UIColor redColor];
+        [rightView addSubview:_navigationBarRightItemBtn = navigationBarRightItemBtn];
         
         [self notificationDidChangeSelectUrl];
     });
@@ -354,9 +381,9 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSInteger selectsUrlsCount = [MLPhotoPickerManager manager].selectsUrls.count;
-        self.tagRightBtn.hidden = (selectsUrlsCount < 1);
-        [self.tagRightBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
-        [self.tagRightBtn startScaleAnimation];
+        self.navigationBarRightItemBtn.hidden = (selectsUrlsCount < 1);
+        [self.navigationBarRightItemBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
+        [self.navigationBarRightItemBtn startScaleAnimation];
     });
 }
 
@@ -386,14 +413,6 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             
             [self notificationDidChangeSelectUrl];
         }
-    }
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    if (gtiOS8) {
-        [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
     }
 }
 
