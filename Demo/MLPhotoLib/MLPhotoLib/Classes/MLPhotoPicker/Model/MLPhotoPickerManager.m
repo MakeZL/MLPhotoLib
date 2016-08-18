@@ -61,6 +61,11 @@
     return tmpImages;
 }
 
+- (BOOL)isBeyondMaxCount
+{
+    return [MLPhotoPickerManager manager].selectsUrls.count >= [MLPhotoPickerManager manager].maxCount;
+}
+
 + (void)clear
 {
     [[self manager] setNavigationController:nil];

@@ -352,11 +352,12 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 
 - (void)notificationDidChangeSelectUrl
 {
-    NSInteger selectsUrlsCount = [MLPhotoPickerManager manager].selectsUrls.count;
-    self.tagRightBtn.hidden = (selectsUrlsCount < 1);
-    [self.tagRightBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
-    
-    [self.tagRightBtn startScaleAnimation];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger selectsUrlsCount = [MLPhotoPickerManager manager].selectsUrls.count;
+        self.tagRightBtn.hidden = (selectsUrlsCount < 1);
+        [self.tagRightBtn setTitle:@(selectsUrlsCount).stringValue forState:UIControlStateNormal];
+        [self.tagRightBtn startScaleAnimation];
+    });
 }
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance
@@ -382,6 +383,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.contentCollectionView.albumAssets = assets;
             });
+            
+            [self notificationDidChangeSelectUrl];
         }
     }
 }

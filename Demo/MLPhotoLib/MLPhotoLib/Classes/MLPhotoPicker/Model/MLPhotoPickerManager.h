@@ -41,4 +41,6 @@ static NSString *MLMaxCountMessage = @"已经超出图片的最大数咯~";
 @property (nonatomic, strong, readonly) NSMutableArray *originalImage;
 @property (nonatomic, strong, readonly) NSMutableArray *thumbImages;
 
+
+- (BOOL)isBeyondMaxCount;
 @end

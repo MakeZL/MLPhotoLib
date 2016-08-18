@@ -10,6 +10,7 @@
 #import "MLImagePickerCollectionViewCell.h"
 #import "MLPhotoPickerManager.h"
 #import "MLPhotoKitData.h"
+#import "MLImagePickerHUD.h"
 #import "MLPhotoPickerData.h"
 
 // ----- PhotoBrowser -----
@@ -95,6 +96,11 @@
     if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0 &&
         [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
         ) {
+        
+        if ([MLPhotoPickerManager manager].isBeyondMaxCount) {
+            [MLImagePickerHUD showMessage:MLMaxCountMessage];
+            return;
+        }
         UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
         UIImagePickerControllerSourceType sourcheType = UIImagePickerControllerSourceTypeCamera;
         imagePickerVC.sourceType = sourcheType;
