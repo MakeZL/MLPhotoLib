@@ -95,42 +95,11 @@
     if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0 &&
         [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
         ) {
-        
-        if ([MLPhotoPickerManager manager].isBeyondMaxCount) {
-            [MLImagePickerHUD showMessage:MLMaxCountMessage];
-            return;
-        }
-        UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
-        UIImagePickerControllerSourceType sourcheType = UIImagePickerControllerSourceTypeCamera;
-        imagePickerVC.sourceType = sourcheType;
-        imagePickerVC.delegate = self;
-        imagePickerVC.allowsEditing = YES;
-        [[MLPhotoPickerManager manager].navigationController presentViewController:imagePickerVC animated:YES completion:nil];
+        [self openCamera];
         return;
     }
     
-    MLPhotoBrowserViewController *photoBrowserVC = [[MLPhotoBrowserViewController alloc] init];
-    NSInteger index = ([MLPhotoPickerManager manager].isSupportTakeCamera) ? indexPath.item - 1: indexPath.item;
-    MLPhotoAsset *asset = self.albumAssets[index];
-    MLPhoto *photo = self.photos[index];
-    photo.assetUrl = asset.assetURL;
-    if (photo.thumbImage == nil) {
-        [asset getThumbImageWithCompletion:^(UIImage *image) {
-            photo.thumbImage = image;
-            [photoBrowserVC reloadDataForIndex:index];
-        }];
-    }
-    if (photo.origianlImage == nil) {
-        [asset getOriginImageWithCompletion:^(UIImage *image) {
-            photo.origianlImage = image;
-            [photoBrowserVC reloadDataForIndex:index];
-        }];
-    }
-    photoBrowserVC.delegate = self;
-    photoBrowserVC.curPage = index;
-    photoBrowserVC.editMode = YES;
-    photoBrowserVC.photos = _photos;
-    [photoBrowserVC displayForVC:[[[MLPhotoPickerManager manager].navigationController childViewControllers] firstObject]];
+    [self openPhotoBrowserAtIndexPath:indexPath];
 }
 
 - (UICollectionViewCell *)configureCameraCellIndexPath:(NSIndexPath *)indexPath
@@ -138,10 +107,11 @@
     UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"MLCamreaCell" forIndexPath:indexPath];
     
     if ([cell.contentView viewWithTag:1000001] == nil) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imageView.center = cell.center;
         imageView.tag = 1000001;
         imageView.image = [UIImage imageNamed:@"MLImagePickerController.bundle/zl_camera"];
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [cell.contentView addSubview:imageView];
     }
     return cell;
@@ -174,7 +144,9 @@
         if (((CGRectGetMaxY(cell.frame) > point.y && CGRectGetMaxY(cell.frame) - point.y <= cell.frame.size.height) == YES &&
             (CGRectGetMaxX(cell.frame) > point.x && CGRectGetMaxX(cell.frame) - point.x <= cell.frame.size.width)
             ) == YES) {
-            [cell activeDidSelecteAsset];
+            if ([cell respondsToSelector:@selector(activeDidSelecteAsset)]) {
+                [cell activeDidSelecteAsset];
+            }
         }
     }
 }
@@ -198,5 +170,46 @@
             [photoBrowser reloadDataForIndex:page];
         }];
     }
+}
+
+#pragma mark - open
+- (void)openCamera
+{
+    if ([MLPhotoPickerManager manager].isBeyondMaxCount) {
+        [MLImagePickerHUD showMessage:MLMaxCountMessage];
+        return;
+    }
+    UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
+    UIImagePickerControllerSourceType sourcheType = UIImagePickerControllerSourceTypeCamera;
+    imagePickerVC.sourceType = sourcheType;
+    imagePickerVC.delegate = self;
+    imagePickerVC.allowsEditing = YES;
+    [[MLPhotoPickerManager manager].navigationController presentViewController:imagePickerVC animated:YES completion:nil];
+}
+
+- (void)openPhotoBrowserAtIndexPath:(NSIndexPath *)indexPath
+{
+    MLPhotoBrowserViewController *photoBrowserVC = [[MLPhotoBrowserViewController alloc] init];
+    NSInteger index = ([MLPhotoPickerManager manager].isSupportTakeCamera) ? indexPath.item - 1: indexPath.item;
+    MLPhotoAsset *asset = self.albumAssets[index];
+    MLPhoto *photo = self.photos[index];
+    photo.assetUrl = asset.assetURL;
+    if (photo.thumbImage == nil) {
+        [asset getThumbImageWithCompletion:^(UIImage *image) {
+            photo.thumbImage = image;
+            [photoBrowserVC reloadDataForIndex:index];
+        }];
+    }
+    if (photo.origianlImage == nil) {
+        [asset getOriginImageWithCompletion:^(UIImage *image) {
+            photo.origianlImage = image;
+            [photoBrowserVC reloadDataForIndex:index];
+        }];
+    }
+    photoBrowserVC.delegate = self;
+    photoBrowserVC.curPage = index;
+    photoBrowserVC.editMode = YES;
+    photoBrowserVC.photos = _photos;
+    [photoBrowserVC displayForVC:[[[MLPhotoPickerManager manager].navigationController childViewControllers] firstObject]];
 }
 @end
