@@ -24,7 +24,22 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.containerView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapContainerView:)]];
+    [self addGestureRecognizer];
+}
+
+- (void)addGestureRecognizer
+{
+    UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapContainerView:)];
+    singleTapGestureRecognizer.numberOfTapsRequired = 1;
+    UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapContainerView:)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    
+    [self.containerView addGestureRecognizer:singleTapGestureRecognizer];
+    [self.containerView addGestureRecognizer:doubleTapGestureRecognizer];
+    [singleTapGestureRecognizer requireGestureRecognizerToFail:doubleTapGestureRecognizer];
+    
+    self.scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 - (void)setPhoto:(MLPhoto *)photo
@@ -46,6 +61,11 @@
 
 - (void)tapContainerView:(UITapGestureRecognizer *)gestureRecognizer
 {
+    if (gestureRecognizer.numberOfTapsRequired == 2) {
+        
+        return;
+    }
+    // Single Recognizer.
     if (self.didTapBlock) {
         self.didTapBlock();
     }

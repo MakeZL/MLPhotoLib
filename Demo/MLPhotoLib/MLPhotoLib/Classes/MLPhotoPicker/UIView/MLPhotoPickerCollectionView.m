@@ -63,6 +63,7 @@
     return _collectionView;
 }
 
+#pragma mark - <UICollectionViewDataSource/UICollectionViewDelegate>
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -92,10 +93,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0 &&
-        [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
+    if ([MLPhotoPickerManager manager].isSupportTakeCamera && indexPath.row == 0
         ) {
-        [self openCamera];
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+        {
+            [self openCamera];
+        }
         return;
     }
     
@@ -105,18 +108,25 @@
 - (UICollectionViewCell *)configureCameraCellIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"MLCamreaCell" forIndexPath:indexPath];
-    
     if ([cell.contentView viewWithTag:1000001] == nil) {
+        [cell.contentView addSubview:[self configureCameraCellImageView:cell]];
+    }
+    return cell;
+}
+
+- (UIImageView *)configureCameraCellImageView:(UICollectionViewCell *)cell
+{
+    return ({
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
         imageView.center = cell.center;
         imageView.tag = 1000001;
         imageView.image = [UIImage imageNamed:@"MLImagePickerController.bundle/zl_camera"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
-        [cell.contentView addSubview:imageView];
-    }
-    return cell;
+        imageView;
+    });
 }
 
+#pragma mark - <UIImagePickerControllerDelegate>
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     UIImage *editedImage = info[@"UIImagePickerControllerEditedImage"];
@@ -133,6 +143,7 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - LongGesturePhoto
 - (void)longPressGestureScrollPhoto:(UILongPressGestureRecognizer *)gestureRecognizer
 {
     CGPoint point = [gestureRecognizer locationInView:self.collectionView];
@@ -172,7 +183,7 @@
     }
 }
 
-#pragma mark - open
+#pragma mark - OPEN
 - (void)openCamera
 {
     if ([MLPhotoPickerManager manager].isBeyondMaxCount) {
