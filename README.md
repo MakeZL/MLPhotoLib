@@ -3,6 +3,12 @@ A New PhotoLib, Compatible with iOS7+, Simple, lightweight
 
 Being Continual updates.. You are welcome to use.
 
+# Features
+    > iOS7+. (Photos/ALAssetLibrary)
+    > Long press can choose more pictures.
+    > PhotoBrowser
+    > ...
+
 # Sketch
 <img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/1.png" width="320"><br/>
 <img src="https://github.com/MakeZL/MLPhotoLib/blob/master/DemoSketch/2.png" width="320">
