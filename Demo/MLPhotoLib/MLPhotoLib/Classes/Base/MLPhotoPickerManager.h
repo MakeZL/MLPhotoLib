@@ -29,6 +29,8 @@
 @property (nonatomic, strong, readonly) NSMutableArray *originalImage;
 @property (nonatomic, strong, readonly) NSMutableArray *thumbImages;
 
+- (void)removeThumbAssetUrl:(NSURL *)assetUrl;
+- (void)removeOriginalAssetUrl:(NSURL *)assetUrl;
 
 - (BOOL)isBeyondMaxCount;
 @end

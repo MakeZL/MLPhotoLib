@@ -66,6 +66,28 @@
     return [MLPhotoPickerManager manager].selectsUrls.count >= [MLPhotoPickerManager manager].maxCount;
 }
 
+- (void)removeThumbAssetUrl:(NSURL *)assetUrl
+{
+    for (NSDictionary *dic in [MLPhotoPickerManager manager].selectsThumbImages) {
+        if ([[[dic allKeys] firstObject] isEqual:assetUrl])
+        {
+            [[MLPhotoPickerManager manager].selectsThumbImages removeObject:dic];
+            break;
+        }
+    }
+}
+
+- (void)removeOriginalAssetUrl:(NSURL *)assetUrl
+{
+    for (NSDictionary *dic in [MLPhotoPickerManager manager].selectsOriginalImage) {
+        if ([[[dic allKeys] firstObject] isEqual:assetUrl])
+        {
+            [[MLPhotoPickerManager manager].selectsOriginalImage removeObject:dic];
+            break;
+        }
+    }
+}
+
 + (void)clear
 {
     [[self manager] setNavigationController:nil];

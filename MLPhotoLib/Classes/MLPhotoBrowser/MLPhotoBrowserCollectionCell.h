@@ -11,6 +11,8 @@
 @class MLPhoto;
 typedef void(^didTapCellBlock)();
 @interface MLPhotoBrowserCollectionCell : UICollectionViewCell
+/// Can Delete Photo
+@property (assign, nonatomic) BOOL editMode;
 @property (nonatomic, strong) MLPhoto *photo;
 @property (nonatomic, copy) didTapCellBlock didTapBlock;
 @end

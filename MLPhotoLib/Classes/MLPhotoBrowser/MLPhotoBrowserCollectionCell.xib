@@ -20,24 +20,36 @@
                                 <rect key="frame" x="0.0" y="0.0" width="331" height="472"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xyq-rU-5rS">
-                                        <rect key="frame" x="65.5" y="136" width="200" height="200"/>
+                                        <rect key="frame" x="65" y="136" width="200" height="200"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="faU-cF-n8N"/>
                                             <constraint firstAttribute="height" constant="200" id="zlq-Ez-sGf"/>
                                         </constraints>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WuY-Lf-oda">
+                                        <rect key="frame" x="281" y="70" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ez0-q2-TrY"/>
+                                            <constraint firstAttribute="width" constant="30" id="jqY-mg-a3y"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="rightBtnClick" destination="gTV-IL-0wX" eventType="touchUpInside" id="FLu-jC-wOK"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="top" secondItem="b5s-lC-n3A" secondAttribute="top" id="48k-A7-tJG"/>
                                     <constraint firstAttribute="height" constant="128" id="7Y1-hh-0gP"/>
                                     <constraint firstAttribute="width" constant="320" id="BHz-RT-lRu"/>
+                                    <constraint firstAttribute="trailing" secondItem="WuY-Lf-oda" secondAttribute="trailing" constant="20" id="DkI-Lk-Bt6"/>
                                     <constraint firstAttribute="trailing" secondItem="Xyq-rU-5rS" secondAttribute="trailing" id="K9o-wn-jXe"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="leading" secondItem="b5s-lC-n3A" secondAttribute="leading" id="MPO-Yx-H2i"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="900" id="QAu-b0-hBN"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerY" secondItem="b5s-lC-n3A" secondAttribute="centerY" id="UaC-mL-D7h"/>
                                     <constraint firstAttribute="bottom" secondItem="Xyq-rU-5rS" secondAttribute="bottom" id="VTw-bq-Udd"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerX" secondItem="b5s-lC-n3A" secondAttribute="centerX" id="flJ-Zr-fhR"/>
+                                    <constraint firstItem="WuY-Lf-oda" firstAttribute="top" secondItem="b5s-lC-n3A" secondAttribute="top" constant="70" id="sB7-VT-fq7"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerX" secondItem="b5s-lC-n3A" secondAttribute="centerX" id="utN-gM-bLE"/>
                                     <constraint firstItem="Xyq-rU-5rS" firstAttribute="centerY" secondItem="b5s-lC-n3A" secondAttribute="centerY" id="xXF-iw-i0b"/>
                                 </constraints>
@@ -86,6 +98,7 @@
                 <outlet property="imageView" destination="Xyq-rU-5rS" id="dGi-uW-7wy"/>
                 <outlet property="imageViewHeightLayoutConstraint" destination="zlq-Ez-sGf" id="UPS-KZ-EEj"/>
                 <outlet property="imageViewWidthLayoutConstraint" destination="faU-cF-n8N" id="Pg1-HV-kPB"/>
+                <outlet property="rightButton" destination="WuY-Lf-oda" id="3v0-ET-Mxd"/>
                 <outlet property="scrollView" destination="9eK-eX-oUh" id="WXC-jg-nda"/>
             </connections>
             <point key="canvasLocation" x="204.5" y="332"/>
