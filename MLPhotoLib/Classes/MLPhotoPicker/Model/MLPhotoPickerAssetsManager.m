@@ -2,7 +2,7 @@
 //  MLPhotoPickerAssetsManager.m
 //  MLPhotoLib
 //
-//  Created by 张磊 on 16/8/3.
+//  Created by leisuro on 16/8/3.
 //  Copyright © 2016年 Free. All rights reserved.
 //
 

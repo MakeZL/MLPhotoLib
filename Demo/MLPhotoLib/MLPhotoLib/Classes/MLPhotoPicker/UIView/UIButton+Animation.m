@@ -2,7 +2,7 @@
 //  UIButton+Animation.m
 //  MLPhotoLib
 //
-//  Created by 张磊 on 16/8/9.
+//  Created by leisuro on 16/8/9.
 //  Copyright © 2016年 Free. All rights reserved.
 //
 

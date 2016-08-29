@@ -15,6 +15,8 @@
 + (instancetype)pickerViewController;
 /// Limit Count. Default 9
 @property (nonatomic, assign) NSUInteger maxCount;
+/// MLImagePickerAssetsFilter.
+@property (nonatomic, assign) MLImagePickerAssetsFilter assetsFilter;
 /// Support Camera. Default YES
 @property (nonatomic, assign) BOOL isSupportTakeCamera;
 /// Show && CallBlock.
@@ -25,6 +27,7 @@
                                             NSError *error))completionHandle;
 /// Recoder Last Select Picker PHAsset/ALAsset URL.
 @property (nonatomic, strong) NSArray<NSURL *>*selectAssetsURL;
+
 
 /// Categories Use.
 @property (nonatomic, strong) NSArray<MLPhotoPickerGroup *>*groups;

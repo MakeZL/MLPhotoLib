@@ -14,6 +14,8 @@
 + (void)clear;
 
 @property (nonatomic, assign) NSInteger maxCount;
+/// MLImagePickerAssetsFilter.
+@property (nonatomic, assign) MLImagePickerAssetsFilter assetsFilter;
 /// Support Camera.
 @property (nonatomic, assign) BOOL isSupportTakeCamera;
 @property (nonatomic, strong) NSMutableArray *selectsUrls;

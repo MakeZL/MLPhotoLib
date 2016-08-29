@@ -30,4 +30,8 @@ static NSInteger MLShowRowCellCount = 3;
 static CGFloat MLImagePickerCellMargin = 2;
 static NSString *MLMaxCountMessage = @"已经超出图片的最大数咯~";
 
+// Progress Width/Height
+static NSInteger const MLPickerProgressViewW = 50;
+static NSInteger const MLPickerProgressViewH = 50;
+
 #endif /* MLPhotoPickerHeader_h */

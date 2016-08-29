@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "BrowserViewController.h"
+
 #import "MLImagePickerViewController.h"
 #import "MLPhotoBrowserViewController.h"
 #import "MLImagePickerMenuTableViewCell.h"
@@ -28,6 +30,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"#MLPhoto#";
 }
 
 /// IBAction
@@ -66,11 +70,6 @@
               NSLog(@" originalImages -- :%@", originalImages);
           }
     }];
-}
-
-- (IBAction)actionQuickPrev
-{
-    
 }
 
 - (void)configurePhotoBrowserThumbImages:(NSArray *)thumbImages origianlImages:(NSArray *)origianlImages
@@ -120,7 +119,6 @@ static NSMutableArray *_photosM;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MLPhotoBrowserViewController *browserVC = [[MLPhotoBrowserViewController alloc] init];
-//    browserVC.editMode = YES;
     browserVC.curPage = indexPath.item;
     browserVC.photos = _photosM;
     [browserVC displayForVC:self];
