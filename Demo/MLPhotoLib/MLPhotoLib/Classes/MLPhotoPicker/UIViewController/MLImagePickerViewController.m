@@ -136,15 +136,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         self.fetchResult = [self.imageManager fetchResult];
         
         [self setupGroup];
-        
-        NSMutableArray *assets = @[].mutableCopy;
-        for (NSInteger i = 0; i < self.fetchResult.count; i++){
-            MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
-            asset.asset = self.fetchResult[i];
-            [assets addObject:asset];
-        }
-        self.contentCollectionView.albumAssets = assets;
-        self.contentCollectionView.group = [self.groups firstObject];
+        [self reloadCollectionViewWithGroup:[self.groups firstObject]];
+        [self.groupTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else {
         WeakSelf
         MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
@@ -171,10 +164,15 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         {
             if ([collection isKindOfClass:[PHAssetCollection class]])
             {
+                PHAssetCollectionSubtype subtype = [collection assetCollectionSubtype];
+                MLImagePickerAssetsFilter filter = [MLPhotoPickerManager manager].assetsFilter;
                 // Filter empty Assets.
                 PHFetchResult *collectionResult = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
                 if (collectionResult.count > 0)
                 {
+                    if (filter == MLImagePickerAssetsFilterAllVideos && subtype != PHAssetCollectionSubtypeSmartAlbumVideos) {
+                        continue;
+                    }
                     MLPhotoPickerGroup *group = [[MLPhotoPickerGroup alloc] init];
                     group.collection = collection;
                     [groups addObject:group];
@@ -356,6 +354,13 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     _isSupportTakeCamera = isSupportTakeCamera;
     
     [MLPhotoPickerManager manager].isSupportTakeCamera = isSupportTakeCamera;
+}
+
+- (void)setAssetsFilter:(MLImagePickerAssetsFilter)assetsFilter
+{
+    _assetsFilter = assetsFilter;
+    
+    [MLPhotoPickerManager manager].assetsFilter = assetsFilter;
 }
 
 - (void)tappendTitleView

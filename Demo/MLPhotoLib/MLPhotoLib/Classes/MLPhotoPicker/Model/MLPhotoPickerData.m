@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MLPhotoPickerData.h"
 #import "MLPhotoAsset.h"
+#import "MLPhotoPickerManager.h"
 
 @interface MLPhotoPickerData ()
 @property (nonatomic , strong)ALAssetsLibrary *library;
@@ -77,7 +78,16 @@
         if (group){
             // 包装一个模型来赋值
             MLPhotoPickerGroup *pickerGroup = [[MLPhotoPickerGroup alloc] init];
-            [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+            MLImagePickerAssetsFilter assetsFilter = [MLPhotoPickerManager manager].assetsFilter;
+            // filter
+            if (assetsFilter == MLImagePickerAssetsFilterAllPhotos) {
+                [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+            } else if (assetsFilter == MLImagePickerAssetsFilterAllVideos) {
+                [group setAssetsFilter:[ALAssetsFilter allVideos]];
+            }
+//            else if (assetsFilter == MLImagePickerAssetsFilterAllAssets) {
+//                [group setAssetsFilter:[ALAssetsFilter allAssets]];
+//            }
             pickerGroup.group = group;
             pickerGroup.groupName = [group valueForProperty:@"ALAssetsGroupPropertyName"];
             pickerGroup.type = [group valueForProperty:@"ALAssetsGroupPropertyType"];
@@ -94,32 +104,9 @@
     [self.library enumerateGroupsWithTypes:type usingBlock:resultBlock failureBlock:nil];
 }
 
-
-/**
- * 获取所有组对应的图片与视频
- */
-- (void)getAllGroupWithPhotosAndVideos:(MLPhotoPickerDataPhotoCallBack)callBack{
-    NSMutableArray *groups = [NSMutableArray array];
-    ALAssetsLibraryGroupsEnumerationResultsBlock resultBlock = ^(ALAssetsGroup *group, BOOL *stop){
-        if (group){
-            // 包装一个模型来赋值
-            MLPhotoPickerGroup *pickerGroup = [[MLPhotoPickerGroup alloc] init];
-            pickerGroup.group = group;
-            pickerGroup.groupName = [group valueForProperty:@"ALAssetsGroupPropertyName"];
-            pickerGroup.thumbImage = [UIImage imageWithCGImage:[group posterImage]];
-            pickerGroup.assetsCount = [group numberOfAssets];
-            [groups addObject:pickerGroup];
-        }else{
-            callBack(groups);
-        }
-    };
-    
-    NSInteger type = ALAssetsGroupAll;
-    
-    [self.library enumerateGroupsWithTypes:type usingBlock:resultBlock failureBlock:nil];
-}
-
 - (void)getAllGroupAllPhotos:(BOOL)allPhotos withResource:(MLPhotoPickerDataPhotoCallBack)callBack{
+    
+    MLImagePickerAssetsFilter assetsFilter = [MLPhotoPickerManager manager].assetsFilter;
     NSMutableArray *groups = [NSMutableArray array];
     ALAssetsLibraryGroupsEnumerationResultsBlock resultBlock = ^(ALAssetsGroup *group, BOOL *stop){
         if (group){
@@ -144,13 +131,6 @@
     NSInteger type = ALAssetsGroupAll;
     
     [self.library enumerateGroupsWithTypes:type usingBlock:resultBlock failureBlock:nil];
-}
-
-/**
- * 获取所有组对应的图片
- */
-- (void)getAllGroupWithVideos:(MLPhotoPickerDataPhotoCallBack)callBack {
-    [self getAllGroupAllPhotos:NO withResource:callBack];
 }
 
 #pragma mark -传入一个组获取组里面的Asset

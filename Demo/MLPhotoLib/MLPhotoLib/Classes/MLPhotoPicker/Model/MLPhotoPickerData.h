@@ -24,12 +24,6 @@ typedef void(^MLPhotoPickerDataPhotoCallBack)(NSArray *array);
 + (instancetype)pickerData;
 /// 获取所有相册组
 - (void)getAllGroup:(MLPhotoPickerDataPhotoCallBack)callBack;
-/// 获取所有组对应的图片与视频
-- (void)getAllGroupWithPhotosAndVideos:(MLPhotoPickerDataPhotoCallBack)callBack;
-/// 获取所有组对应的图片
-- (void)getAllGroupWithPhotos:(MLPhotoPickerDataPhotoCallBack)callBack;
-/// 获取所有组对应的Videos
-- (void)getAllGroupWithVideos:(MLPhotoPickerDataPhotoCallBack)callBack;
 /// 传入一个组获取组里面的Asset
 - (void)getGroupPhotosWithGroup:(MLPhotoPickerGroup *)pickerGroup finished:(MLPhotoPickerDataPhotoCallBack)callBack;
 /// 传入一个AssetsURL来获取UIImage

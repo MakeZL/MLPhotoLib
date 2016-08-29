@@ -9,6 +9,13 @@
 #ifndef MLPhotoPickerHeader_h
 #define MLPhotoPickerHeader_h
 
+// Get all photos assets in the assets group.
+typedef NS_ENUM(NSUInteger, MLImagePickerAssetsFilter) {
+    MLImagePickerAssetsFilterAllPhotos = 0,
+    MLImagePickerAssetsFilterAllVideos,
+//    MLImagePickerAssetsFilterAllAssets
+};
+
 #define gtiOS8 ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
 #define WeakSelf __weak typeof(self)weakSelf = self;
 

@@ -103,6 +103,9 @@
 - (BOOL)isVideoType{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored"-Wdeprecated"
+    if (self.isPHAsset) {
+        return ([(PHAsset *)self.asset mediaType] == PHAssetMediaTypeVideo);
+    }
     NSString *type = [self.asset valueForProperty:ALAssetPropertyType];
     //媒体类型是视频
     return [type isEqualToString:ALAssetTypeVideo];

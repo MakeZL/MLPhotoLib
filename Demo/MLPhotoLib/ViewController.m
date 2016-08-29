@@ -38,6 +38,11 @@
     pickerVC.maxCount = 3;
     // Recoder
     pickerVC.selectAssetsURL = self.selectUrls;
+    
+    // MLImagePickerAssetsFilterAllPhotos,
+    // MLImagePickerAssetsFilterAllVideos,
+    pickerVC.assetsFilter = MLImagePickerAssetsFilterAllPhotos;
+    
     WeakSelf
     [pickerVC displayForVC:self
           completionHandle:^(BOOL success,

@@ -33,7 +33,7 @@
 {
     [self reloadCollectionViewWithGroup:[self.groups objectAtIndex:indexPath.row]];
     [self tappendTitleView];
-    
+     
     // 更新Cell状态
     MLImagePickerMenuTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [cell setSelected:YES];
