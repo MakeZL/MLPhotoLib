@@ -53,9 +53,4 @@
     }];
 }
 
-+ (void)startScaleBtnAnimation:(UIButton *)btn
-{
-    
-}
-
 @end

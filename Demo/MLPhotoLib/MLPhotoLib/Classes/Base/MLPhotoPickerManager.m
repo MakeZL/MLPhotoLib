@@ -9,6 +9,7 @@
 #import "MLPhotoPickerManager.h"
 
 @implementation MLPhotoPickerManager
+
 + (instancetype)manager
 {
     static id instance = nil;
@@ -97,4 +98,5 @@
     [[[self manager] selectsOriginalImage] removeAllObjects];
     [[[self manager] selectsThumbImages] removeAllObjects];
 }
+
 @end
