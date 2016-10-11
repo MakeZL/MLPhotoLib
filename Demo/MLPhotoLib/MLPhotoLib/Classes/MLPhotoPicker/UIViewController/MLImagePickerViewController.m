@@ -136,7 +136,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         self.fetchResult = [self.imageManager fetchResult];
         
         [self setupGroup];
-        [self reloadCollectionViewWithGroup:[self.groups firstObject]];
+        [self groupsWithAsset:self.groups];
         [self.groupTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else {
         WeakSelf
@@ -181,6 +181,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         }
     }
     self.groups = groups;
+    
 }
 
 - (void)addSelectAssetNotification
@@ -193,7 +194,8 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)groupsWithAsset:(NSArray *)groups
 {
     for (MLPhotoPickerGroup *group in groups) {
-        if ([group.type integerValue] == 16) {
+        if ([group.type integerValue] == 16 ||
+            group.collection.assetCollectionSubtype == 209) {
             // 相机胶卷
             [self reloadCollectionViewWithGroup:group];
             break;
