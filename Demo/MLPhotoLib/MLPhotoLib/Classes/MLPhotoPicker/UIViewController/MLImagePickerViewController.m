@@ -410,16 +410,20 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     
     for (PHFetchResultChangeDetails *detail in [dict allValues]) {
         if (detail.fetchResultAfterChanges.count > detail.fetchResultBeforeChanges.count &&
-            detail.fetchResultAfterChanges.count > self.contentCollectionView.albumAssets.count) {
+            detail.fetchResultAfterChanges.count > self.fetchResult.count) {
             // Insert
             self.fetchResult = detail.fetchResultAfterChanges;
             
             NSMutableArray *assets = self.contentCollectionView.albumAssets.mutableCopy;
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
             asset.asset = [self.fetchResult firstObject];
+            NSURL *assetURL = [asset assetURL];
+            if ([[MLPhotoPickerManager manager].selectsUrls containsObject:assetURL]) {
+                continue;
+            }
+            
             [assets insertObject:asset atIndex:0];
             
-            NSURL *assetURL = [asset assetURL];
             if (assetURL != nil) {
                 // Recoder Take Camera
                 [[MLPhotoPickerManager manager].selectsUrls addObject:assetURL];
