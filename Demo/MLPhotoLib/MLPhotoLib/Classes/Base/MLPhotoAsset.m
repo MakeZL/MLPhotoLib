@@ -116,11 +116,15 @@
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored"-Wdeprecated"
-    if (self.isPHAsset) {
-        PHAssetResource *resource = [PHAssetResource assetResourcesForAsset:self.asset].firstObject;
-        return [resource valueForKey:@"_privateFileURL"];
-    }
-    return [[self.asset defaultRepresentation] url];
+//    if (self.isPHAsset) {
+//        PHAssetResource *resource = [PHAssetResource assetResourcesForAsset:self.asset].firstObject;
+//        return [resource valueForKey:@"_privateFileURL"];
+//    }
+    
+    PHAsset *asset = (PHAsset *)self.asset;
+    NSURL *url = [NSURL URLWithString:asset.localIdentifier];
+    return url;
+    
 #pragma clang diagnostic pop
 }
 

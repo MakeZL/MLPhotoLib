@@ -71,6 +71,9 @@
     // Add Recoder
     [[MLPhotoPickerAssetsManager manager] addSelectedAssetWith:self.asset];
     self.tagButton.selected = YES;
+    
+    // refresh selectUrl count;
+    [[NSNotificationCenter defaultCenter] postNotificationName:MLNotificationDidChangeSelectUrl object:nil];
 }
 
 @end
