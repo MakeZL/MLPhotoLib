@@ -136,6 +136,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
 - (void)setPhoto:(MLPhoto *)photo{
     _photo = photo;
     
@@ -146,8 +147,10 @@
         return ;
     }
     
+    _photoImageView.image = nil;
+    
     __weak typeof(self) weakSelf = self;
-
+    
     if (photo.assetUrl.absoluteString.length ||
         photo.originalImageUrl.absoluteString.length ||
         photo.thumbImageUrl.absoluteString.length) {
@@ -156,6 +159,8 @@
         if (photoRange.location != NSNotFound && photoRange.length > 0){
             [[MLPhotoPickerData pickerData] getAssetsPhotoWithURLs:photo.assetUrl callBack:^(id obj) {
                 weakSelf.photoImageView.image = obj;
+                //                weakSelf.photoImageView.hidden = NO;
+                
                 weakSelf.isLoadingDone = YES;
                 [weakSelf displayImage];
             }];

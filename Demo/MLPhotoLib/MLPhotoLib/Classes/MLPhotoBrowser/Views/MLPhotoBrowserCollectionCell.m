@@ -16,6 +16,7 @@
 @interface MLPhotoBrowserCollectionCell () <MLPhotoPickerPhotoScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet MLPhotoPickerBrowserPhotoScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnTopLayoutConstraint;
 @end
 
 @implementation MLPhotoBrowserCollectionCell
@@ -27,12 +28,18 @@
     [self.rightButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_icon_image_yes"] forState:UIControlStateSelected];
     
     self.scrollView.photoScrollViewDelegate = self;
+    if (([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)) {
+        self.btnTopLayoutConstraint.constant = 90;
+    } else {
+        self.btnTopLayoutConstraint.constant = 70;
+    }
+    
 }
 
 - (void)setPhoto:(MLPhoto *)photo
 {
     _photo = photo;
-
+    
     self.scrollView.photo = photo;
     
     [self updateRightButtonStatus];
