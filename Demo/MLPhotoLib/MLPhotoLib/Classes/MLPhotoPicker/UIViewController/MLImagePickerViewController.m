@@ -136,8 +136,18 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         self.fetchResult = [self.imageManager fetchResult];
         
         [self setupGroup];
-        [self groupsWithAsset:self.groups];
-        [self.groupTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        
+        NSInteger assetsCount = 0;
+        MLPhotoPickerGroup *group = nil;
+        for (MLPhotoPickerGroup *tmpGroup in self.groups) {
+            if (tmpGroup.assetsCount > assetsCount) {
+                group = tmpGroup;
+                assetsCount = tmpGroup.assetsCount;
+            }
+        }
+        
+        [self reloadCollectionViewWithGroup:group];
+        [self.groupTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:[self.groups indexOfObject:group] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else {
         WeakSelf
         MLPhotoPickerData *pickerData = [MLPhotoPickerData pickerData];
@@ -181,7 +191,6 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         }
     }
     self.groups = groups;
-    
 }
 
 - (void)addSelectAssetNotification
@@ -194,8 +203,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
 - (void)groupsWithAsset:(NSArray *)groups
 {
     for (MLPhotoPickerGroup *group in groups) {
-        if ([group.type integerValue] == 16 ||
-            group.collection.assetCollectionSubtype == 209) {
+        if ([group.type integerValue] == 16) {
             // 相机胶卷
             [self reloadCollectionViewWithGroup:group];
             break;
@@ -251,7 +259,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         titleButton.adjustsImageWhenHighlighted = NO;
         [titleButton setImage:[UIImage imageNamed:@"MLImagePickerController.bundle/zl_xialajiantou"] forState:UIControlStateNormal];
         [titleButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-        [titleButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [titleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [titleButton setTitle:@"Camera Roll" forState:UIControlStateNormal];
         [titleButton addTarget:self action:@selector(tappendTitleView) forControlEvents:UIControlEventTouchUpInside];
         [titleView addSubview:titleButton];
@@ -266,7 +274,7 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
         rightView.frame = CGRectMake(self.view.frame.size.width - 60, 0, 40, 44);
         UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [rightBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [rightBtn setFrame:rightView.bounds];
         [rightBtn setTitle:@"完成" forState:UIControlStateNormal];
         [rightBtn addTarget:self action:@selector(tappendDoneBtn) forControlEvents:UIControlEventTouchUpInside];
@@ -410,20 +418,16 @@ typedef void(^completionHandle)(BOOL success, NSArray<NSURL *>*assetUrls, NSArra
     
     for (PHFetchResultChangeDetails *detail in [dict allValues]) {
         if (detail.fetchResultAfterChanges.count > detail.fetchResultBeforeChanges.count &&
-            detail.fetchResultAfterChanges.count > self.fetchResult.count) {
+            detail.fetchResultAfterChanges.count > self.contentCollectionView.albumAssets.count) {
             // Insert
             self.fetchResult = detail.fetchResultAfterChanges;
             
             NSMutableArray *assets = self.contentCollectionView.albumAssets.mutableCopy;
             MLPhotoAsset *asset = [[MLPhotoAsset alloc] init];
             asset.asset = [self.fetchResult firstObject];
-            NSURL *assetURL = [asset assetURL];
-            if ([[MLPhotoPickerManager manager].selectsUrls containsObject:assetURL]) {
-                continue;
-            }
-            
             [assets insertObject:asset atIndex:0];
             
+            NSURL *assetURL = [asset assetURL];
             if (assetURL != nil) {
                 // Recoder Take Camera
                 [[MLPhotoPickerManager manager].selectsUrls addObject:assetURL];
